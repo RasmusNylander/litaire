@@ -1,0 +1,55 @@
+# The following is heavily inspired by SerenityOs and parts may thus fall under the BSD-2-Clause License.
+name: Lint Commit Messages
+on: [ push ]
+
+jobs:
+  lint_commit_messages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch commit messages
+        id: fetch_messages
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const push = context.payload;
+            if (push.size > 20) {
+              core.error("Error: Pushing more than 20 commits! Fetching commits through GitHub API is not implemented yet.");
+              core.notice("Notice: Only the last 20 commits will be checked.");
+            }
+            const commits = context.payload.commits;
+            const messages = [];
+            for (const {id, message } of commits) {
+              messages.push({id, message});
+            }
+            return messages;
+
+      - name: Lint messages
+        id: lint
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const rules = [
+              {
+                pattern: /(^|\n)(\S+\s?)*(\n|$)/,
+                error: "A line may not contain multiple whitespace characters in a row.\nMake sure that you have not used CRLF.",
+              }
+            ];
+            const commit_messages = ${{steps.fetch_messages.outputs.result}};
+            
+            const errors = [];
+            for (const {id, message} of commit_messages) {
+              core.info(`Processing ${id}\n`)
+              const commit_errors = [];
+              for (const {pattern, error} of rules) {
+                if (!pattern.test(message)) {
+                  commit_errors.push(error);
+                }
+              }
+              if (commit_errors.length > 0) {
+                const title = message.split("\n")[0];
+                errors.push([`${title}, (${id}):`, ...commit_errors].join("\n\t"));
+              }
+            }
+            if (errors.length > 0) {
+              core.setFailed(["One or more commits do not match the commit-message rule:\n", ...errors].join("\n"));
+            }
