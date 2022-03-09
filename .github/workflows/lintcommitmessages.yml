@@ -45,6 +45,10 @@ jobs:
                 pattern: /^.*\p{Lu}[^:]*?($|(\r?\n))/u,
                 error: "First character after subsystem specification must be capitalized.",
               },
+              {
+                pattern: /^.*[^.\n](\r?\n.*)*$/u,
+                error: "A commit-message header must not end in a full stop.",
+              },
             ];
             const commit_messages = ${{steps.fetch_messages.outputs.result}};
             
