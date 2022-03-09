@@ -30,7 +30,15 @@ jobs:
           script: |
             const rules = [
               {
-                pattern: /(^|\n)(\S+\s?)*(\n|$)/u,
+                pattern: /[\S\s]/u,
+                error: "A commit-message must not be empty.",
+              },
+              {
+                pattern: /^(?!\s)[\S\s]*(?<!\s)$/u,
+                error: "A commit-message must not begin or end with a whitespace character.",
+              },
+              {
+                pattern: /^(\S+((\n+)|\s?))*$/u,
                 error: "A line may not contain multiple whitespace characters in a row. Make sure that you have not used CRLF.",
               },
               {
