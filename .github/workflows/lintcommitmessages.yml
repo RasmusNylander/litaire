@@ -30,12 +30,16 @@ jobs:
           script: |
             const rules = [
               {
-                pattern: /(^|\n)(\S+\s?)*(\n|$)/,
+                pattern: /(^|\n)(\S+\s?)*(\n|$)/u,
                 error: "A line may not contain multiple whitespace characters in a row. Make sure that you have not used CRLF.",
               },
               {
-                pattern: /^\S.*\S: .+/,
+                pattern: /^((\S.*?\S)|\S):/u,
                 error: "A commit-message header must specify a subsystem.",
+              },
+              {
+                pattern: /^.*\p{Lu}[^:]*?($|(\r?\n))/u,
+                error: "First character after subsystem specification must be capitalized.",
               },
             ];
             const commit_messages = ${{steps.fetch_messages.outputs.result}};
