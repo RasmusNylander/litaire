@@ -1,4 +1,4 @@
-# The following is heavily inspired by SerenityOs and parts may thus fall under the BSD-2-Clause License.
+# The following is inspired by SerenityOs and parts may thus fall under the BSD-2-Clause License.
 name: Lint Commit Messages
 on: [ push ]
 
@@ -60,6 +60,10 @@ jobs:
               {
                 pattern: /^.*[^.\n](\r?\n.*)*$/u,
                 error: "A commit-message header must not end in a full stop.",
+              },
+              {
+                pattern: /^\s*.*(\r?\n\s*(\r?\n.*)*)?$/u,
+                error: "There must be a blank line between a commit-message header and body.",
               },
             ];
             const commit_messages = ${{steps.fetch_messages.outputs.result}};
