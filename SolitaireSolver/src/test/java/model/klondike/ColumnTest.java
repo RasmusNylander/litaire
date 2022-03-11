@@ -24,4 +24,30 @@ class ColumnTest {
 		assertEquals(Card.Unknown, column.get(1));
 	}
 
+	@Test
+	void reveal_should_change_card() {
+		Column column = new Column(1);
+		Integer top = column.lastElement();
+		column.reveal(Card.Ace, 0);
+		assertNotEquals(top, column.lastElement());
+	}
+
+	@Test
+	void reveal_should_throw_exception_if_card_is_known() {
+		Column column = new Column(1);
+		Integer top = column.lastElement();
+		column.reveal(Card.Ace, 0);
+		assertThrows(Exception.class, () -> column.reveal(Card.Ace, 0));
+	}
+
+	@Test
+	void reveal_should_update_card() {
+		Column column = new Column(5);
+		Integer top = column.lastElement();
+		column.reveal(Card.Ace, 4);
+		column.reveal(Card.Jack | Card.Type, 2);
+		assertEquals(column.get(4), Card.Ace);
+		assertEquals(column.get(2), Card.Jack | Card.Type);
+	}
+
 }

@@ -31,6 +31,11 @@ class Column extends Vector<Integer> {
 		}
 	}
 
+	public void reveal(@NotNull Integer card, int index) {
+		if (elementAt(index) != Card.Unknown)
+			throw new IllegalArgumentException("Error: Card at index " + index + " is already revealed!");
+		this.setElementAt(card, index);
+	}
 }
 
 public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns, @NotNull Stock stock) {
