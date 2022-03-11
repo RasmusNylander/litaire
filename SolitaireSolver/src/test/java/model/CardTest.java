@@ -35,4 +35,33 @@ class CardTest {
 		assertNotEquals(deck[3], deck[4]);
 	}
 
+	@Test
+	void string_should_not_be_null() {
+		assertNotNull(Card.asString(0));
+	}
+
+	@Test
+	void string_should_not_be_blank() {
+		assertFalse(Card.asString(0).isBlank());
+	}
+
+	@Test
+	void string_should_contain_number() {
+		assertTrue(Card.asString(Card.Seven).contains("7"));
+		assertTrue(Card.asString(Card.Two).contains("2"));
+	}
+
+	@Test
+	void string_should_contain_suit() {
+		assertTrue(Card.asString(Card.Colour).matches(".*[♠♣♥♦].*"));
+		assertTrue(Card.asString(Card.Nine | Card.Type).matches(".*[♠♣♥♦].*"));
+		assertTrue(Card.asString(Card.Jack).matches(".*[♠♣♥♦].*"));
+	}
+
+	@Test
+	void strings_should_be_same_size() {
+		assertEquals(Card.asString(Card.King | Card.Colour | Card.Type).length(), Card.asString(Card.Ace | Card.Colour).length());
+		assertEquals(Card.asString(Card.Ten | Card.Type).length(), Card.asString(Card.Nine | Card.Colour).length());
+	}
+
 }

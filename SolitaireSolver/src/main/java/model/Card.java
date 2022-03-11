@@ -34,4 +34,10 @@ public abstract class Card {
 		}
 		return deck;
 	}
+
+	public static String asString(int card) {
+		final String[] rankAsString = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
+		final String[] suitAsString = {"♠", "♣", "♥", "♦"};
+		return suitAsString[(card & SuitMask) >> 4] + rankAsString[card & RankMask];
+	}
 }
