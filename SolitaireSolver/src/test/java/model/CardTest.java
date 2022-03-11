@@ -64,4 +64,11 @@ class CardTest {
 		assertEquals(Card.asString(Card.Ten | Card.Type).length(), Card.asString(Card.Nine | Card.Colour).length());
 	}
 
+	@Test
+	void unknown_cards_should_have_string_representation() {
+		assertDoesNotThrow(() -> {
+			Card.asString(Card.Unknown);
+		});
+	}
+
 }
