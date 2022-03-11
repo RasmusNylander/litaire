@@ -50,7 +50,7 @@ jobs:
                 error: "A commit-message header must specify a subsystem.",
               },
               {
-                pattern: /^.*\p{Lu}[^:]*?($|(\r?\n))/u,
+                pattern: /^((\p{Lu}(.(?!: ))*($|\r?\n))|(.*?:\s*\p{Lu}))/u,
                 error: "First character after subsystem specification must be capitalized.",
               },
               {
