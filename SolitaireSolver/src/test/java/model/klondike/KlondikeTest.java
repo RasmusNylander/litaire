@@ -1,11 +1,16 @@
 package model.klondike;
 
 import model.Card;
+import model.Move;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class KlondikeTest {
+
 	@Test
 	void new_game_should_not_be_null() {
 		assertNotNull(Klondike.newGame());
@@ -76,58 +81,47 @@ class KlondikeTest {
 		assertEquals(24, Klondike.newGame().stock().size());
 	}
 
+	@Test
+	void possible_moves_should_not_be_null() {
+		assertNotNull(Klondike.newGame().possibleMoves());
+	}
+
+	@Test
+	void possible_moves_should_be_empty() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], new Stock(0)); // This is cumbersome, please change
+		assertTrue(klondike.possibleMoves().isEmpty());
+	}
+
+	@Test
+	void should_be_possible_to_move_from_column_to_foundation() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Column[] columns = new Column[]{new Column(1)};
+		columns[0].reveal(Card.Ace | Card.Colour, 0);
+		Klondike klondike = new Klondike(foundations, columns, new Stock(0)); // This is cumbersome, please change
+		assertFalse(klondike.possibleMoves().isEmpty());
+	}
+
+	@Test
+	void should_not_be_possible_to_move_two_to_foundation() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Column[] columns = new Column[]{new Column(1)};
+		columns[0].reveal(Card.Two | Card.Type, 0);
+		Klondike klondike = new Klondike(foundations, columns, new Stock(0)); // This is cumbersome, please change
+		assertTrue(klondike.possibleMoves().isEmpty());
+	}
+
+	@Test
+	void should_be_possible_to_move_onto_previous_card_in_foundation() {
+		Foundation[] foundations = new Foundation[]{new Foundation(), new Foundation()};
+		foundations[0].push(Card.Ace);
+		foundations[1].push(Card.Jack | Card.Colour);
+		Column[] columns = new Column[]{new Column(1), new Column(2)};
+		columns[0].reveal(Card.Two, 0);
+		columns[1].reveal(Card.Queen | Card.Colour, 1);
+		Klondike klondike = new Klondike(foundations, columns, new Stock(0)); // This is cumbersome, please change
+		assertTrue(klondike.possibleMoves().containsAll(List.of(
+				new Move(Card.Two, Optional.of(Card.Ace)),
+				new Move(Card.Queen | Card.Colour, Optional.of(Card.Jack | Card.Colour))
+		)));
+	}
 }
-
-
-
-
-/*
-	@Test
-	void unknownCards_should_not_return_null() {
-		Klondaike klondike = new Klondaike(new Stack[0], new Vector[0],  new ArrayList<>(0));
-		assertNotNull(klondike.unknownCards());
-	}
-
-	@Test
-	void unknownCards_should_return_0_when_all_cards_are_known() {
-		Klondaike klondike = new Klondaike(new Stack[0], new Vector[0],  Arrays.asList(Card.fullDeck()));
-		assertEquals(0, klondike.unknownCards().length);
-	}
-
-	@Test
-	void unknownCards_should_return_unknown_cards() {
-		Integer[] deck = Card.fullDeck();
-		Klondaike klondike = new Klondaike(new Stack[0], new Vector[0],  Arrays.asList(deck));
-		List<Integer> unknownCards = new ArrayList<Integer>();
-
-		unknownCards.add(deck[0]); deck[0] = Card.Unknown;
-		assertArrayEquals(unknownCards.toArray(), klondike.unknownCards());
-
-		unknownCards.add(deck[4]); deck[4] = Card.Unknown;
-		unknownCards.add(deck[38]); deck[38] = Card.Unknown;
-		unknownCards.add(deck[17]); deck[17] = Card.Unknown;
-		unknownCards.add(deck[19]); deck[19] = unknownCards.get(0); unknownCards.remove(0);
-		unknownCards.sort(Integer::compare);
-		assertArrayEquals(unknownCards.toArray(), Arrays.stream(klondike.unknownCards()).sorted().toArray());
-	}
-
-	@Test
-	void unknownGame_should_not_be_null() {
-		assertNotNull(Klondaike.UnknownGame());
-	}
-
-	@Test
-	void unknownGame_should_have_52_unknown_cards() {
-		assertEquals(52, Klondaike.UnknownGame().unknownCards().length);
-	}
-
-	@Test
-	void unknownGame_should_have_7_columns() {
-		assertEquals(7, Klondaike.UnknownGame().getColumns().length);
-	}
-
-	@Test
-	void unknownGame_should_have_4_foundations() {
-		assertEquals(7, Klondaike.UnknownGame().getColumns().length);
-	}
-	*/

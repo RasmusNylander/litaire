@@ -1,11 +1,11 @@
 package model.klondike;
 
 import model.Card;
+import model.Move;
+import model.Solitaire;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 class Stock extends ArrayList<Integer> {
 	protected Stock(int numberOfCards) {
@@ -38,7 +38,8 @@ class Column extends Vector<Integer> {
 	}
 }
 
-public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns, @NotNull Stock stock) {
+public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns,
+                       @NotNull Stock stock) implements Solitaire {
 
 	public static Klondike newGame() {
 		Column[] columns = new Column[7];
@@ -52,5 +53,28 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		}
 
 		return new Klondike(foundations, columns, new Stock(24));
+	}
+
+	@Override
+	public List<Move> possibleMoves() {
+		List<Move> moves = new ArrayList<>(24);
+		// This will probably be too slow, but let's not optimise prematurely
+		for (Column column : this.columns) { // Todo: Refactor, should probably be extracted to method
+			if (column.isEmpty()) continue;
+			Integer topCard = column.lastElement();
+			for (Foundation foundation : foundations) {
+				if (foundation.isEmpty()) {
+					if ((topCard & Card.RankMask) == Card.Ace)
+						moves.add(new Move(topCard, Optional.empty()));
+					break;
+				}
+				Integer foundationTop = foundation.peek();
+				if (topCard - 1 == foundationTop) {
+					moves.add(new Move(topCard, Optional.of(foundationTop)));
+					break;
+				}
+			}
+		}
+		return moves;
 	}
 }
