@@ -7,15 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-class Stock extends ArrayList<Integer> {
-	protected Stock(int numberOfCards) {
-		super(numberOfCards);
-		for (int i = 0; i < numberOfCards; i++) {
-			this.add(Card.Unknown);
-		}
-	}
-}
-
 class Foundation extends Stack<Integer> {
 	protected Foundation() {
 		super();
@@ -52,7 +43,10 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 			foundations[i] = new Foundation();
 		}
 
-		return new Klondike(foundations, columns, new Stock(24));
+		Collection<Integer> stockCards = Arrays.asList(Card.fullDeck()).subList(0, 24);
+		Stock stock = new Stock(stockCards);
+
+		return new Klondike(foundations, columns, stock);
 	}
 
 	@Override

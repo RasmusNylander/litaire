@@ -88,7 +88,7 @@ class KlondikeTest {
 
 	@Test
 	void possible_moves_should_be_empty() {
-		Klondike klondike = new Klondike(new Foundation[0], new Column[0], new Stock(0)); // This is cumbersome, please change
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty); // This is cumbersome, please change
 		assertTrue(klondike.possibleMoves().isEmpty());
 	}
 
@@ -97,7 +97,7 @@ class KlondikeTest {
 		Foundation[] foundations = new Foundation[]{new Foundation()};
 		Column[] columns = new Column[]{new Column(1)};
 		columns[0].reveal(Card.Ace | Card.Colour, 0);
-		Klondike klondike = new Klondike(foundations, columns, new Stock(0)); // This is cumbersome, please change
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty); // This is cumbersome, please change
 		assertFalse(klondike.possibleMoves().isEmpty());
 	}
 
@@ -106,7 +106,7 @@ class KlondikeTest {
 		Foundation[] foundations = new Foundation[]{new Foundation()};
 		Column[] columns = new Column[]{new Column(1)};
 		columns[0].reveal(Card.Two | Card.Type, 0);
-		Klondike klondike = new Klondike(foundations, columns, new Stock(0)); // This is cumbersome, please change
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty); // This is cumbersome, please change
 		assertTrue(klondike.possibleMoves().isEmpty());
 	}
 
@@ -118,7 +118,7 @@ class KlondikeTest {
 		Column[] columns = new Column[]{new Column(1), new Column(2)};
 		columns[0].reveal(Card.Two, 0);
 		columns[1].reveal(Card.Queen | Card.Colour, 1);
-		Klondike klondike = new Klondike(foundations, columns, new Stock(0)); // This is cumbersome, please change
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty); // This is cumbersome, please change
 		assertTrue(klondike.possibleMoves().containsAll(List.of(
 				new Move(Card.Two, Optional.of(Card.Ace)),
 				new Move(Card.Queen | Card.Colour, Optional.of(Card.Jack | Card.Colour))
