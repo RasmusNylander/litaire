@@ -3,8 +3,7 @@ package model.klondike;
 import model.Card;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FoundationTest {
 	@Test
@@ -43,5 +42,10 @@ class FoundationTest {
 		Foundation foundation = new Foundation();
 		foundation.addElement(Card.King);
 		assertFalse(foundation.canAcceptCard(Card.Unknown));
+	}
+
+	@Test
+	void should_throw_exception_when_pushing_not_accepted_card() {
+		assertThrows(IllegalArgumentException.class, () -> new Foundation().push(Card.Unknown));
 	}
 }

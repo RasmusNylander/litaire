@@ -13,6 +13,13 @@ class Foundation extends Stack<Integer> {
 		super();
 	}
 
+	@Override
+	public Integer push(@NotNull Integer card) {
+		if (!canAcceptCard(card))
+			throw new IllegalArgumentException("Error: Cannot push card: [" + card + "] onto Foundation: " + this);
+		return card;
+	}
+
 	@Contract(pure = true)
 	public boolean canAcceptCard(@NotNull Integer card) {
 		if (card == Card.Unknown) return false;
