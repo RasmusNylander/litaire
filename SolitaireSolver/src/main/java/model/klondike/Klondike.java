@@ -50,8 +50,8 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 	}
 
 	@Override
-	public List<Move> possibleMoves() {
-		List<Move> moves = new ArrayList<>(24);
+	public Set<Move> possibleMoves() {
+		Set<Move> moves = new HashSet<>(24);
 		// This will probably be too slow, but let's not optimise prematurely
 		for (Column column : this.columns) { // Todo: Refactor, should probably be extracted to method
 			if (column.isEmpty()) continue;
