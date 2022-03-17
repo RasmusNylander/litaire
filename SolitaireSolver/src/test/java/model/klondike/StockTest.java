@@ -110,4 +110,74 @@ class StockTest {
 		assertTrue(new Stock(Card.Ace, Card.Two, Card.Three, Card.Four).reachableCards().contains(Card.Four));
 	}
 
+	@Test
+	void second_card_should_be_reachable() {
+		assertTrue(new Stock(Card.Ace, Card.Two).reachableCards().contains(Card.Two));
+	}
+
+	@Test
+	void take_should_remove_card() {
+		Stock stock = new Stock(Card.Ace);
+		stock.take(Card.Ace);
+		assertTrue(stock.isEmpty());
+	}
+
+	@Test
+	void take_should_return_card() {
+		Stock stock = new Stock(Card.Ace);
+		assertEquals(Card.Ace, stock.take(Card.Ace));
+	}
+
+	@Test
+	void take_should_throw_exception_if_not_containing_card() {
+		Stock stock = new Stock(Card.Ace);
+		assertThrows(IllegalArgumentException.class, () -> stock.take(Card.Two));
+	}
+
+	@Test
+	void taking_unreachable_card_should_throw_exception() {
+		Stock stock = new Stock(Card.Ace, Card.Two);
+		assertThrows(IllegalArgumentException.class, () -> stock.take(Card.Ace));
+	}
+
+	@Test
+	void given_five_card_fourth_should_be_reachable_after_taking_third() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four, Card.Five);
+		stock.take(Card.Three);
+		assertTrue(stock.reachableCards().contains(Card.Four));
+	}
+
+	@Test
+	void card_below_taken_should_be_reachable() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		stock.take(Card.Three);
+		assertTrue(stock.reachableCards().contains(Card.Two));
+	}
+
+	@Test
+	void taking_should_keep_every_third_from_waste_reachable() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four, Card.Five, Card.Six, Card.Seven, Card.Eight, Card.Nine, Card.Ten);
+		stock.take(Card.Three);
+		assertTrue(stock.reachableCards().contains(Card.Six));
+		assertTrue(stock.reachableCards().contains(Card.Nine));
+	}
+
+	@Test
+	void taking_after_waste_should_make_unreachable_every_third_until_new_waste() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four, Card.Five, Card.Six, Card.Seven, Card.Eight, Card.Nine, Card.Ten);
+		stock.take(Card.Three);
+		stock.take(Card.Nine);
+		assertFalse(stock.reachableCards().contains(Card.Six));
+	}
+
+	@Test
+	void taking_from_waste_should_only_remove_taken_card_from_reachable() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four, Card.Five, Card.Six, Card.Seven, Card.Eight, Card.Nine, Card.Ten);
+		stock.take(Card.Six);
+		Set<Integer> reachableCards = stock.reachableCards();
+		reachableCards.remove(stock.take(Card.Five));
+		reachableCards.add(Card.Four);
+		assertEquals(reachableCards, stock.reachableCards());
+	}
+
 }
