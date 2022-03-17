@@ -3,6 +3,7 @@ package model.klondike;
 import model.Card;
 import model.Move;
 import model.Solitaire;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -10,6 +11,13 @@ import java.util.*;
 class Foundation extends Stack<Integer> {
 	protected Foundation() {
 		super();
+	}
+
+	@Contract(pure = true)
+	public boolean canAcceptCard(@NotNull Integer card) {
+		if (card == Card.Unknown) return false;
+		if (isEmpty()) return (card & Card.RankMask) == Card.Ace;
+		return card - peek() == 1;
 	}
 
 }
