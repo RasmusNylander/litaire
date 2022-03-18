@@ -3,9 +3,11 @@ package model.klondike;
 import model.Card;
 import model.Move;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.DynamicTest.stream;
@@ -215,7 +217,58 @@ class KlondikeTest {
 		assertTrue(klondike.possibleMoves().isEmpty());
 	}
 
-	
+	@Test
+	void should_be_possible_to_move_from_foundations_to_columns() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		foundations[0].addElement(Card.Three);
+		Column[] columns = new Column[]{new Column(1)};
+		columns[0].addElement(Card.Four | Card.Colour);
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
+		assertFalse(klondike.possibleMoves().isEmpty());
+	}
 
-	
+	@Test
+	void should_be_possible_to_move_from_multiple_foundations_to_columns() {
+		Foundation[] foundations = new Foundation[]{new Foundation(),new Foundation()};
+		foundations[0].addElement(Card.Three);
+		foundations[1].addElement(Card.Jack | Card.Colour);
+		Column[] columns = new Column[]{new Column(1), new Column(3)};
+		columns[0].addElement(Card.Four | Card.Colour);
+		columns[1].addElement(Card.Queen);
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
+		assertEquals(2, klondike.possibleMoves().size());
+	}
+
+	@Test
+	void possible_moves_should_only_contain_one_move_when_only_one_foundation_and_only_one_column() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		foundations[0].addElement(Card.Three);
+		Column[] columns = new Column[]{new Column(1)};
+		columns[0].addElement(Card.Four | Card.Colour);
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
+		assertEquals(1, klondike.possibleMoves().size());
+	}
+
+	@Test
+	void move_from_foundation_to_column_should_include_involved_cards(){
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		foundations[0].addElement(Card.Three);
+		Column[] columns = new Column[]{new Column(1)};
+		columns[0].addElement(Card.Four | Card.Colour);
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
+		assertEquals(new Move(Card.Three, Optional.of(Card.Four | Card.Colour)), klondike.possibleMoves().toArray()[0]);
+	}
+
+	@Test
+	void move_from_foundation_to_mulitple_columns_should_be_possible(){
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		foundations[0].addElement(Card.Three);
+
+		Column[] columns = new Column[]{new Column(1), new Column(3)};
+		columns[0].addElement(Card.Four | Card.Colour);
+		columns[1].addElement(Card.Four | Card.Colour | Card.Type);
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
+		assertEquals(2, klondike.possibleMoves().size());
+
+	}
 }
