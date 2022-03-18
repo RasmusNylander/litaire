@@ -34,6 +34,7 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		for (Column column : columns) {
 			moves.addAll(columnMoves(column));
 		}
+		moves.addAll(stockMoves());
 		return moves;
 	}
 
@@ -63,4 +64,25 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 
 		return moves;
 	}
+
+	private Collection<Move> stockMoves(){
+		Collection<Move> moves = new ArrayList<>();
+
+		if(stock.isEmpty()){
+			return moves;
+		}
+		
+		Set<Integer> stockCards = stock.reachableCards();
+		for (Integer card : stockCards){
+			for(Foundation foundation : foundations){
+				if(foundation.canAcceptCard(card)){
+					moves.add(new Move(card, foundation.asDestination()));
+				}
+			}
+		}
+		return moves;
+
+
+	}
+
 }

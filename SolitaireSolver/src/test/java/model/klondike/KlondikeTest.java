@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.DynamicTest.stream;
 
 class KlondikeTest {
 
@@ -165,12 +166,40 @@ class KlondikeTest {
 		assertTrue(klondike.possibleMoves().isEmpty(), "Possible moves: " + klondike.possibleMoves());
 	}
 
-	/*
+	
 	@Test
-	void should_be_possible_to_move_stock_to_foundations() {
+	void should_be_possible_to_move_from_stock_to_foundations() {
 		Foundation[] foundations = new Foundation[]{new Foundation()};
-		Stock stock = Stock.Empty;
-		Klondike klondike = new Klondike()
+		Stock stock = new Stock(Card.Ace); 
+		Klondike klondike = new Klondike( foundations, new Column[0], stock);
+		assertFalse(klondike.possibleMoves().isEmpty());
 	}
-	 */
+
+	@Test
+	void should_not_be_possible_to_get_null_move(){
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Stock stock = new Stock(Card.Ace); 
+		Klondike klondike = new Klondike( foundations, new Column[0], stock);
+		assertNotNull(klondike.possibleMoves().toArray()[0]);
+	}
+
+	@Test
+	void should_not_be_possible_to_move_non_ace_from_stock_to_empty_foundation(){
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Stock stock = new Stock(Card.Two); 
+		Klondike klondike = new Klondike( foundations, new Column[0], stock);
+		assertTrue(klondike.possibleMoves().isEmpty());
+	}
+
+	@Test
+	void should_be_possible_to_move_from_stock_to_columns() {
+		Column[] column = new Column[]{new Column(0)};
+		Stock stock = new Stock(Card.King); 
+		Klondike klondike = new Klondike( new Foundation[0], column, stock);
+		assertFalse(klondike.possibleMoves().isEmpty());
+	}
+
+	
+
+	
 }
