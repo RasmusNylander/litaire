@@ -113,8 +113,8 @@ class KlondikeTest {
 	@Test
 	void should_be_possible_to_move_onto_previous_card_in_foundation() {
 		Foundation[] foundations = new Foundation[]{new Foundation(), new Foundation()};
-		foundations[0].push(Card.Ace);
-		foundations[1].push(Card.Jack | Card.Colour);
+		foundations[0].addElement(Card.Ace);
+		foundations[1].addElement(Card.Jack | Card.Colour);
 		Column[] columns = new Column[]{new Column(1), new Column(2)};
 		columns[0].reveal(Card.Two, 0);
 		columns[1].reveal(Card.Queen | Card.Colour, 1);

@@ -73,22 +73,26 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 	public Set<Move> possibleMoves() {
 		Set<Move> moves = new HashSet<>(24);
 		// This will probably be too slow, but let's not optimise prematurely
-		for (Column column : this.columns) { // Todo: Refactor, should probably be extracted to method
-			if (column.isEmpty()) continue;
-			Integer topCard = column.lastElement();
-			for (Foundation foundation : foundations) {
-				if (foundation.isEmpty()) {
-					if ((topCard & Card.RankMask) == Card.Ace)
-						moves.add(new Move(topCard, Optional.empty()));
-					break;
-				}
-				Integer foundationTop = foundation.peek();
-				if (topCard - 1 == foundationTop) {
-					moves.add(new Move(topCard, Optional.of(foundationTop)));
-					break;
-				}
+		for (Column column : columns) {
+			moves.addAll(columnMoves(column));
+		}
+		return moves;
+	}
+
+	private Collection<Move> columnMoves(Column column) {
+		Collection<Move> moves = new ArrayList<>();
+
+		if (column.isEmpty())
+			return moves;
+
+		Integer topCard = column.lastElement();
+		for (Foundation foundation : foundations) {
+			if (foundation.canAcceptCard(topCard)) {
+				moves.add(new Move(topCard, foundation.asDestination()));
+				break;
 			}
 		}
+
 		return moves;
 	}
 }
