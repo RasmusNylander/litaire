@@ -110,6 +110,17 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 			}
 		}
 
+
+		for (Integer card : column) {
+			if ((card & Card.RankMask) == Card.Unknown)
+				continue;
+			for (Column kloumn : this.columns) {
+				if (kloumn == column) continue;
+				if (!kloumn.canAcceptCard(card)) continue;
+				moves.add(new Move(card, kloumn.asDestination()));
+			}
+		}
+
 		return moves;
 	}
 }

@@ -124,4 +124,53 @@ class KlondikeTest {
 				new Move(Card.Queen | Card.Colour, Optional.of(Card.Jack | Card.Colour))
 		)));
 	}
+
+	@Test
+	void should_be_possible_to_move_between_columns() {
+		Column[] columns = new Column[]{new Column(0), new Column(2)};
+		columns[1].reveal(Card.King, 1);
+		Klondike klondike = new Klondike(new Foundation[0], columns, new Stock());
+		assertTrue(klondike.possibleMoves().contains(new Move(Card.King, Optional.empty())), "Possible moves: " + klondike.possibleMoves());
+	}
+
+	@Test
+	void should_not_be_possible_to_move_unknown_between_columns() {
+		Column[] columns = new Column[]{new Column(0), new Column(2), new Column(19)};
+		Klondike klondike = new Klondike(new Foundation[0], columns, new Stock());
+		assertTrue(klondike.possibleMoves().isEmpty(), "Possible moves: " + klondike.possibleMoves());
+	}
+
+	@Test
+	void should_not_be_possible_to_move_king_between_non_empty_columns() {
+		Column[] columns = new Column[]{new Column(1), new Column(2), new Column(19)};
+		columns[1].reveal(Card.King, 1);
+		Klondike klondike = new Klondike(new Foundation[0], columns, new Stock());
+		assertTrue(klondike.possibleMoves().isEmpty(), "Possible moves: " + klondike.possibleMoves());
+	}
+
+	@Test
+	void should_not_be_possible_to_move_non_king_to_empty_columns() {
+		Column[] columns = new Column[]{new Column(0), new Column(2), new Column(0)};
+		columns[1].reveal(Card.Seven, 1);
+		Klondike klondike = new Klondike(new Foundation[0], columns, new Stock());
+		assertTrue(klondike.possibleMoves().isEmpty(), "Possible moves: " + klondike.possibleMoves());
+	}
+
+	@Test
+	void should_not_be_possible_to_move_card_to_same_color() {
+		Column[] columns = new Column[]{new Column(1), new Column(2), new Column(19)};
+		columns[0].reveal(Card.Three, 0);
+		columns[1].reveal(Card.Two, 1);
+		Klondike klondike = new Klondike(new Foundation[0], columns, new Stock());
+		assertTrue(klondike.possibleMoves().isEmpty(), "Possible moves: " + klondike.possibleMoves());
+	}
+
+	/*
+	@Test
+	void should_be_possible_to_move_stock_to_foundations() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Stock stock = Stock.Empty;
+		Klondike klondike = new Klondike()
+	}
+	 */
 }
