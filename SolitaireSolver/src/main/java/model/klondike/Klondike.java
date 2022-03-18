@@ -27,6 +27,7 @@ class Foundation extends Stack<Integer> {
 		return card - peek() == 1;
 	}
 
+	@Contract(pure = true)
 	public Optional<Integer> asDestination() {
 		if (isEmpty())
 			return Optional.empty();
@@ -46,6 +47,22 @@ class Column extends Vector<Integer> {
 		if (elementAt(index) != Card.Unknown)
 			throw new IllegalArgumentException("Error: Card at index " + index + " is already revealed!");
 		this.setElementAt(card, index);
+	}
+
+	@Contract(pure = true)
+	public Optional<Integer> asDestination() {
+		if (isEmpty())
+			return Optional.empty();
+		if (lastElement() == Card.Unknown)
+			throw new IllegalStateException("Error: Undefined! Unknown card cannot be a destination.");
+		return Optional.of(lastElement());
+	}
+
+	@Contract(pure = true)
+	public boolean canAcceptCard(@NotNull Integer card) {
+		if (isEmpty()) return card == Card.King;
+		if ((card & Card.Colour) == (lastElement() & Card.Colour)) return false;
+		return (lastElement() & Card.RankMask) - (card & Card.RankMask) == 1;
 	}
 }
 
