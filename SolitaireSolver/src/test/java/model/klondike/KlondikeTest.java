@@ -199,6 +199,22 @@ class KlondikeTest {
 		assertFalse(klondike.possibleMoves().isEmpty());
 	}
 
+	@Test
+	void should_not_be_possible_to_get_null_move_from_columns(){
+		Column[] column = new Column[]{new Column(0)};
+		Stock stock = new Stock(Card.King); 
+		Klondike klondike = new Klondike( new Foundation[0], column, stock);
+		assertNotNull(klondike.possibleMoves().toArray()[0]);
+	}
+
+	@Test
+	void should_not_be_possible_to_move_non_king_from_stock_to_empty_column(){
+		Column[] column = new Column[]{new Column(0)};
+		Stock stock = new Stock(Card.Eight); 
+		Klondike klondike = new Klondike( new Foundation[0], column, stock);
+		assertTrue(klondike.possibleMoves().isEmpty());
+	}
+
 	
 
 	

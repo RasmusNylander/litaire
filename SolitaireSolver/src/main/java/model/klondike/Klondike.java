@@ -77,11 +77,16 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 			for(Foundation foundation : foundations){
 				if(foundation.canAcceptCard(card)){
 					moves.add(new Move(card, foundation.asDestination()));
+					break;
+				}
+			}
+			for(Column column : columns){
+				if(column.canAcceptCard(card)){
+					moves.add(new Move(card, column.asDestination()));
 				}
 			}
 		}
 		return moves;
-
 
 	}
 
