@@ -3,6 +3,8 @@ package model.klondike;
 import model.Card;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FoundationTest {
@@ -48,4 +50,17 @@ class FoundationTest {
 	void should_throw_exception_when_pushing_not_accepted_card() {
 		assertThrows(IllegalArgumentException.class, () -> new Foundation().push(Card.Unknown));
 	}
+
+	@Test
+	void should_return_optional_empty_as_destination_when_empty() {
+		assertEquals(Optional.empty(), new Foundation().asDestination());
+	}
+
+	@Test
+	void should_return_top_card_as_destination_when_not_empty() {
+		Foundation foundation = new Foundation();
+		foundation.addElement(Card.Six | Card.Colour);
+		assertEquals(Optional.of(Card.Six | Card.Colour), foundation.asDestination());
+	}
+
 }

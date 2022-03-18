@@ -27,6 +27,11 @@ class Foundation extends Stack<Integer> {
 		return card - peek() == 1;
 	}
 
+	public Optional<Integer> asDestination() {
+		if (isEmpty())
+			return Optional.empty();
+		return Optional.of(peek());
+	}
 }
 
 class Column extends Vector<Integer> {
