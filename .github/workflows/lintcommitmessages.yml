@@ -1,4 +1,3 @@
-# The following is inspired by SerenityOs and parts may thus fall under the BSD-2-Clause License.
 name: Lint Commit Messages
 on: [ push ]
 
@@ -24,6 +23,7 @@ jobs:
             return messages;
 
       - name: Lint messages
+        # The following is inspired by SerenityOs and parts may thus fall under the BSD-2-Clause License.
         id: lint
         uses: actions/github-script@v6
         with:
