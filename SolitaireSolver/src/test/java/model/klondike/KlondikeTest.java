@@ -3,14 +3,11 @@ package model.klondike;
 import model.Card;
 import model.Move;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.DynamicTest.stream;
 
 class KlondikeTest {
 
@@ -270,5 +267,29 @@ class KlondikeTest {
 		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
 		assertEquals(2, klondike.possibleMoves().size());
 
+	}
+
+	@Test
+	void legal_move_should_throw_exception_if_move_is_null() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
+		assertThrows(IllegalArgumentException.class, () -> klondike.isLegalMove(null));
+	}
+
+	@Test
+	void legal_move_should_return_false_if_moving_card_is_not_in_game() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
+		assertFalse(klondike.isLegalMove(new Move(0, Optional.empty())));
+	}
+
+	@Test
+	void legal_move_should_return_true_if_move_is_in_possible_moves() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		foundations[0].addElement(Card.Three | Card.Colour);
+		Column[] columns = new Column[]{new Column(1), new Column(3)};
+		columns[0].reveal(Card.Four | Card.Colour, 0);
+		columns[1].reveal(Card.Five, 2);
+		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
+		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Three | Card.Colour))));
+		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Five))));
 	}
 }

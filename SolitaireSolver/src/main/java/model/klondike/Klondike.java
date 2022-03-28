@@ -34,13 +34,18 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		for (Column column : columns) {
 			moves.addAll(columnMoves(column));
 		}
-		
-		for( Foundation foundation : foundations){
+
+		for (Foundation foundation : foundations) {
 			moves.addAll(foundationMoves(foundation));
 		}
 
 		moves.addAll(stockMoves());
 		return moves;
+	}
+
+	@Override
+	public boolean isLegalMove(@NotNull Move move) {
+		return this.possibleMoves().contains(move);
 	}
 
 	private Collection<Move> columnMoves(Column column) {
