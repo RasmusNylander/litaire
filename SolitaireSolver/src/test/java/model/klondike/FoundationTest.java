@@ -9,6 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FoundationTest {
 	@Test
+	void push_should_change_contents() {
+		Foundation foundation = new Foundation();
+		foundation.push(Card.Ace);
+		assertNotEquals(new Foundation(), foundation);
+	}
+
+	@Test
 	void should_return_true_given_ace() {
 		assertTrue(new Foundation().canAcceptCard(Card.Ace));
 	}
