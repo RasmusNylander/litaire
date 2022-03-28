@@ -1,6 +1,8 @@
 package model.klondike;
 
 import model.Card;
+import model.IllegalMoveException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -179,5 +181,78 @@ class StockTest {
 		reachableCards.add(Card.Four);
 		assertEquals(reachableCards, stock.reachableCards());
 	}
+
+	@Test
+	void can_accept_card_should_return_false() {
+		assertFalse(new Stock().canAcceptCard(Card.Ace));
+	}
+
+	@Test
+	void receive_should_throw_exception() {
+		assertThrows(IllegalMoveException.class, () -> new Stock().receive(Card.Ace));
+	}
+
+	private static class mockCardContainer implements CardContainer {
+		public boolean receivedWasCalled = false;
+
+		@Override
+		public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+			assert false;
+		}
+
+		@Override
+		public void receive(int... cards) throws IllegalMoveException {
+			receivedWasCalled = true;
+		}
+
+		@Override
+		public @NotNull Set<Integer> reachableCards() {
+			assert false;
+			return null;
+		}
+
+		@Override
+		public boolean canAcceptCard(int card) {
+			assert false;
+			return false;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			assert false;
+			return false;
+		}
+
+		@Override
+		public int getNumberOfCards() {
+			assert false;
+			return 0;
+		}
+	}
+
+	@Test
+	void move_should_throw_exception_if_destination_is_null() {
+		assertThrows(IllegalArgumentException.class, () -> new Stock().move(Card.Ace, null));
+	}
+
+	@Test
+	void move_should_throw_exception_if_card_not_found() {
+		assertThrows(IllegalArgumentException.class, () -> Stock.Empty.move(Card.Ace, new mockCardContainer()));
+	}
+
+	@Test
+	void move_should_remove_card_from_stock() {
+		Stock stock = new Stock(Card.Ace);
+		stock.move(Card.Ace, new mockCardContainer());
+		assertTrue(stock.isEmpty());
+	}
+
+	@Test
+	void move_should_call_receive_on_destination() {
+		mockCardContainer destination = new mockCardContainer();
+		new Stock(Card.Ace).move(Card.Ace, destination);
+		assertTrue(destination.receivedWasCalled);
+	}
+
 
 }

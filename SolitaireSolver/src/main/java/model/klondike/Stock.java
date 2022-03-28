@@ -1,6 +1,7 @@
 package model.klondike;
 
 import model.Card;
+import model.IllegalMoveException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-class Stock {
+class Stock implements CardContainer {
 	private final int[] cards;
 	private int size;
 	private int waste;
@@ -53,12 +54,19 @@ class Stock {
 		return intArray;
 	}
 
+	@Override
 	@Contract(pure = true)
 	public boolean isEmpty() {
 		return size() == 0;
 	}
 
+	@Override
+	public int getNumberOfCards() {
+		return size();
+	}
+
 	@Contract(pure = true)
+	@Deprecated
 	public int size() {
 		return size;
 	}
@@ -66,6 +74,21 @@ class Stock {
 	@Contract(pure = true)
 	private int waste() {
 		return waste;
+	}
+
+	@Override
+	public void receive(int... cards) throws IllegalMoveException {
+		throw new IllegalMoveException("Error: Stock can not receive cards");
+	}
+
+	@Override
+	public boolean canAcceptCard(int card) {
+		return false;
+	}
+
+	@Override
+	public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+		destination.receive(this.take(card));
 	}
 
 	@NotNull
