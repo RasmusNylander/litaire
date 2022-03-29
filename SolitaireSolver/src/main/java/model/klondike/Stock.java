@@ -87,8 +87,11 @@ class Stock implements CardContainer {
 	}
 
 	@Override
-	public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+	public StockMoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+		// TODO: Seemingly doesn't handle exception correctly. If receives fails, the state of this should be unchanged
+		int premoveWaste = waste();
 		destination.receive(this.take(card));
+		return new StockMoveMetaInformation(waste() + 1, premoveWaste);
 	}
 
 	@NotNull

@@ -37,10 +37,11 @@ class Foundation extends Stack<Integer> implements CardContainer {
 	}
 
 	@Override
-	public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+	public MoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
 		if (!this.reachableCards().contains(card))
 			throw new IllegalMoveException("Error: Cannot move card: [" + Card.asString(card) + "] from Foundation: " + this);
 		destination.receive(this.pop());
+		return MoveMetaInformation.Empty;
 	}
 
 	@Override

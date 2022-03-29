@@ -34,7 +34,7 @@ class Column extends Vector<Integer> implements CardContainer {
 	}
 
 	@Override
-	public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+	public MoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
 		if (!reachableCards().contains(card))
 			throw new IllegalMoveException("Error: Card " + Card.asString(card) + " cannot be moved from Column: " + this);
 		int numMovingCards = this.size() - this.indexOf(card);
@@ -52,6 +52,7 @@ class Column extends Vector<Integer> implements CardContainer {
 			}
 			throw e;
 		}
+		return MoveMetaInformation.Empty;
 	}
 
 	@Override

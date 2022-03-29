@@ -215,5 +215,26 @@ class StockTest {
 		assertTrue(destination.receivedWasCalled);
 	}
 
+	@Test
+	void move_should_return_metainformation_with_index_0() {
+		Stock stock = new Stock(Card.Ace);
+		assertEquals(0, stock.move(Card.Ace, new MockCardContainer()).index);
+	}
+
+	@Test
+	void move_should_return_metainformation_with_index_of_card_in_stock() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		assertEquals(2, stock.move(Card.Three, new MockCardContainer()).index);
+		stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		assertEquals(3, stock.move(Card.Four, new MockCardContainer()).index);
+	}
+
+	@Test
+	void move_should_return_premove_waste_index() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		assertEquals(3, stock.move(Card.Three, new MockCardContainer()).waste);
+		assertEquals(1, stock.move(Card.Four, new MockCardContainer()).waste);
+	}
+
 
 }

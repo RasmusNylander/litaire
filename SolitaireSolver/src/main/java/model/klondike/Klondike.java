@@ -8,8 +8,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns,
-                       @NotNull Stock stock) implements Solitaire {
+class MoveMetaInformation {
+	public static MoveMetaInformation Empty = new MoveMetaInformation();
+
+	protected MoveMetaInformation() {
+	}
+}
+
+class StockMoveMetaInformation extends MoveMetaInformation {
+	public final int index;
+	public final int waste;
+
+	StockMoveMetaInformation(int index, int waste) {
+		this.index = index;
+		this.waste = waste;
+	}
+}
 
 
 	public static Klondike newGame() {

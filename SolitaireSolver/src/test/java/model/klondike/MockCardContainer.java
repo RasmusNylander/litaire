@@ -10,8 +10,9 @@ class MockCardContainer implements CardContainer {
 	public boolean canReceive = true;
 
 	@Override
-	public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
+	public MoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
 		assert false;
+		return null;
 	}
 
 	@Override
