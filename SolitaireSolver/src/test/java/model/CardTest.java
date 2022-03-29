@@ -71,4 +71,19 @@ class CardTest {
 		});
 	}
 
+	@Test
+	void is_valid_card_should_return_false_given_number() {
+		assertFalse(Card.isValidCard(-1));
+		assertFalse(Card.isValidCard(14));
+		assertFalse(Card.isValidCard(1000));
+	}
+
+	@Test
+	void is_valid_card_should_return_true_given_card() {
+		assertTrue(Card.isValidCard(Card.Ace | Card.Colour));
+		assertTrue(Card.isValidCard(Card.Unknown));
+		assertTrue(Card.isValidCard(Card.Seven | Card.Type));
+	}
+
+
 }

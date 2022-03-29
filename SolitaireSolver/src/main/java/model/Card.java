@@ -41,4 +41,8 @@ public abstract class Card {
 		final String[] suitAsString = {"♠", "♣", "♥", "♦"};
 		return suitAsString[(card & SuitMask) >> 4] + rankAsString[card & RankMask];
 	}
+
+	public static boolean isValidCard(int card) {
+		return (card & RankMask) >= Ace && (card & RankMask) <= Unknown; // This also ensure that no bit is set after SuitMask
+	}
 }
