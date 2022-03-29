@@ -7,6 +7,13 @@ import java.util.Optional;
 
 public record Move(int movedCard, @NotNull Optional<Integer> destination) {
 
+	public Move(int movedCard, @NotNull Optional<Integer> destination) {
+		if (!Card.isValidCard(movedCard) | (destination.isPresent() && !Card.isValidCard(destination.get())))
+			throw new IllegalArgumentException("Error: Invalid card.");
+		this.movedCard = movedCard;
+		this.destination = destination;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -19,4 +26,13 @@ public record Move(int movedCard, @NotNull Optional<Integer> destination) {
 	public int hashCode() {
 		return Objects.hash(movedCard, destination);
 	}
+
+
+	@Override
+	public String toString() {
+		return "Move[" +
+				"movedCard=" + movedCard + ", " +
+				"destination=" + destination + ']';
+	}
+
 }
