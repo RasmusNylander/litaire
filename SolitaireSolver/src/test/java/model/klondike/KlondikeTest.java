@@ -1,6 +1,7 @@
 package model.klondike;
 
 import model.Card;
+import model.IllegalMoveException;
 import model.Move;
 import org.junit.jupiter.api.Test;
 
@@ -292,4 +293,69 @@ class KlondikeTest {
 		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Three | Card.Colour))));
 		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Five))));
 	}
+
+	@Test
+	void make_move_should_throw_exception_is_move_is_null() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
+		assertThrows(IllegalArgumentException.class, () -> klondike.makeMove(null));
+	}
+
+	@Test
+	void make_move_should_throw_exception_if_moving_card_not_contained() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], new Stock(1));
+		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(0, Optional.empty())));
+	}
+
+	@Test
+	void make_move_should_throw_exception_if_destination_card_not_contained() {
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		foundations[0].addElement(Card.Three | Card.Colour);
+		Klondike klondike = new Klondike(foundations, new Column[]{new Column(0)}, Stock.Empty);
+		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(Card.Three | Card.Colour, Optional.of(Card.Four))));
+	}
+
+	@Test
+	void make_move_should_move_card_from_stock() {
+		Stock stock = new Stock(Card.Ace);
+		Klondike klondike = new Klondike(new Foundation[]{new Foundation(), new Foundation()}, new Column[0], stock);
+		klondike.makeMove(new Move(Card.Ace, Optional.empty()));
+		assertTrue(stock.isEmpty());
+	}
+
+	@Test
+	void make_move_should_move_card_from_foundation() {
+		Foundation foundation = new Foundation();
+		foundation.addElement(Card.King);
+		Klondike klondike = new Klondike(new Foundation[]{foundation}, new Column[]{new Column(0)}, Stock.Empty);
+		klondike.makeMove(new Move(Card.King, Optional.empty()));
+		assertTrue(foundation.isEmpty());
+	}
+
+	@Test
+	void make_move_should_move_card_to_column() {
+		Column[] columns = new Column[]{new Column(1), new Column(3)};
+		columns[0].addElement(Card.Four | Card.Colour);
+		columns[1].addElement(Card.Five);
+		Klondike klondike = new Klondike(new Foundation[0], columns, Stock.Empty);
+		klondike.makeMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Five)));
+		assertEquals(Card.Four | Card.Colour, columns[1].lastElement());
+	}
+
+	@Test
+	void make_move_should_move_card_to_foundation() {
+		Foundation[] foundations = new Foundation[]{new Foundation(), new Foundation()};
+		foundations[0].addElement(Card.Three | Card.Colour);
+		Klondike klondike = new Klondike(foundations, new Column[0], new Stock(Card.Four | Card.Colour));
+		klondike.makeMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Three | Card.Colour)));
+		assertEquals(Card.Four | Card.Colour, foundations[0].peek());
+	}
+
+	@Test
+	void make_move_should_throw_exception_if_moving_non_king_or_ace_and_no_specified_destination() {
+		Foundation[] foundations = new Foundation[]{new Foundation(), new Foundation()};
+		foundations[0].addElement(Card.Three | Card.Colour);
+		Klondike klondike = new Klondike(foundations, new Column[0], new Stock(Card.Four | Card.Colour));
+		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(Card.Four | Card.Colour, Optional.empty())));
+	}
+
 }
