@@ -1,6 +1,7 @@
 package model.klondike;
 
 import model.Card;
+import model.IllegalMoveException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -92,6 +93,116 @@ class ColumnTest {
 		Column column = new Column(0);
 		column.addElement(Card.Seven);
 		assertFalse(column.canAcceptCard(Card.Six));
+	}
+
+	@Test
+	void reachable_cards_should_not_be_null() {
+		assertNotNull(new Column(0).reachableCards());
+	}
+
+	@Test
+	void reachable_cards_should_not_be_empty() {
+		Column column = new Column(1);
+		column.reveal(Card.Ace, 0);
+		assertFalse(column.reachableCards().isEmpty());
+	}
+
+	@Test
+	void reachable_cards_should_contain_multiple_cards() {
+		Column column = new Column(2);
+		column.reveal(Card.Ace, 0);
+		column.reveal(Card.Two, 1);
+		assertEquals(2, column.reachableCards().size());
+	}
+
+	@Test
+	void reachable_cards_should_contain_last_card() {
+		Column column = new Column(2);
+		column.reveal(Card.Two, 1);
+		assertTrue(column.reachableCards().contains(Card.Two));
+	}
+
+	@Test
+	void reachable_cards_should_not_contain_unknown_cards() {
+		Column column = new Column(2);
+		column.reveal(Card.Ace, 1);
+		assertEquals(1, column.reachableCards().size());
+	}
+
+	@Test
+	void receive_should_throw_exception_when_cannot_accept_card() {
+		Column column = new Column(0);
+		assertThrows(IllegalMoveException.class, () -> column.receive(Card.Ace));
+	}
+
+	@Test
+	void receive_should_modify_column() {
+		Column column = new Column(0);
+		column.receive(Card.King);
+		assertNotEquals(new Column(0), column);
+	}
+
+	@Test
+	void receive_should_not_modify_column_if_throws_exception() {
+		Column column = new Column(0);
+		assertThrows(IllegalMoveException.class, () -> column.receive(Card.King, Card.Queen, Card.Jack, Card.Four));
+		assertEquals(new Column(0), column);
+	}
+
+	@Test
+	void move_should_modify_column() {
+		Column column = new Column(0);
+		column.addElement(Card.King);
+		column.move(Card.King, new MockCardContainer());
+		assertEquals(new Column(0), column);
+	}
+
+	@Test
+	void move_should_call_receive_on_destination() {
+		Column column = new Column(1);
+		column.addElement(Card.Nine);
+		MockCardContainer destination = new MockCardContainer();
+		column.move(Card.Nine, destination);
+		assertTrue(destination.receivedWasCalled);
+	}
+
+	@Test
+	void move_should_throw_exception_if_card_not_reachable() {
+		Column column = new Column(0);
+		assertThrows(IllegalMoveException.class, () -> column.move(Card.Seven, new MockCardContainer()));
+	}
+
+	@Test
+	void move_should_move_cards_below() {
+		Column column = new Column(0);
+		column.addElement(Card.King);
+		column.addElement(Card.Queen);
+		column.move(Card.King, new MockCardContainer());
+		assertEquals(new Column(0), column);
+	}
+
+	@Test
+	void move_should_throw_exception_if_destination_cannot_receive() {
+		Column column = new Column(0);
+		column.addElement(Card.King);
+		MockCardContainer destination = new MockCardContainer();
+		destination.canReceive = false;
+		assertThrows(IllegalMoveException.class, () -> column.move(Card.King, destination));
+	}
+
+	@Test
+	void move_should_not_modify_column_if_throws_exception() {
+		Column column = new Column(0);
+		column.addElement(Card.King);
+		column.addElement(Card.Queen);
+		MockCardContainer destination = new MockCardContainer();
+		destination.canReceive = false;
+		assertThrows(IllegalMoveException.class, () -> column.move(Card.King, destination));
+
+		Column original = new Column(0);
+		original.addElement(Card.King);
+		original.addElement(Card.Queen);
+		assertEquals(original, column);
 	}
 
 }

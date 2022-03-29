@@ -7,6 +7,7 @@ import java.util.Set;
 
 class MockCardContainer implements CardContainer {
 	public boolean receivedWasCalled = false;
+	public boolean canReceive = true;
 
 	@Override
 	public void move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
@@ -15,6 +16,7 @@ class MockCardContainer implements CardContainer {
 
 	@Override
 	public void receive(int... cards) throws IllegalMoveException {
+		if (!canReceive) throw new IllegalMoveException("Error: MockCardContainer cannot receive.");
 		receivedWasCalled = true;
 	}
 
