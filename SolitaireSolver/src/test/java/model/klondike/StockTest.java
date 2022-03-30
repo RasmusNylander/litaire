@@ -236,5 +236,4 @@ class StockTest {
 		assertEquals(1, stock.move(Card.Four, new MockCardContainer()).waste);
 	}
 
-
 }

@@ -127,7 +127,7 @@ class Stock implements CardContainer {
 			throw new IllegalArgumentException("Error: Cannot remove " + card + " as it is not contained herein.");
 
 		size--;
-		if (size() - index >= 0)
+		if (size() - index >= 0) // Shuffle cards back (shuffle as in move, not randomise)
 			System.arraycopy(cards, index + 1, cards, index, size() - index);
 
 		return index;
@@ -144,4 +144,21 @@ class Stock implements CardContainer {
 		return card;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Stock stock = (Stock) o;
+		if (size != stock.size || waste != stock.waste) return false;
+		return Arrays.equals(cards, 0, size(), stock.cards, 0, size());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = Objects.hash(size, waste);
+		for (int i = 0; i < size(); i++) {
+			result = 31 * result + cards[i]; // Arrays.hashCode(cards) but ignoring cards that are not in the stock
+		}
+		return result;
+	}
 }
