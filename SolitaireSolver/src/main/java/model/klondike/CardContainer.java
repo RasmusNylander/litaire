@@ -9,6 +9,8 @@ import java.util.Set;
 public interface CardContainer {
 	MoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException;
 
+	void undo(int card, CardContainer cardDestination, MoveMetaInformation moveMetaInformation);
+
 	void receive(int... cards) throws IllegalMoveException;
 
 	boolean canAcceptCard(int card);

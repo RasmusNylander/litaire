@@ -94,6 +94,12 @@ class Stock implements CardContainer {
 		return new StockMoveMetaInformation(waste() + 1, premoveWaste);
 	}
 
+	@Override
+	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
+		// TODO: implement this
+		assert false;
+	}
+
 	@NotNull
 	@Contract(pure = true)
 	public Set<Integer> reachableCards() {

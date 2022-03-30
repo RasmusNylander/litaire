@@ -45,6 +45,11 @@ class Foundation extends Stack<Integer> implements CardContainer {
 	}
 
 	@Override
+	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
+		destination.move(card, this);
+	}
+
+	@Override
 	public void receive(int... cards) throws IllegalMoveException {
 		for (int i = 0; i < cards.length; i++) {
 			int card = cards[i];

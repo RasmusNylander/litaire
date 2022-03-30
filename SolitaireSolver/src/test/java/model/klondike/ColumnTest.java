@@ -211,4 +211,30 @@ class ColumnTest {
 		assertEquals(original, column);
 	}
 
+	@Test
+	void undo_should_undo_move_single_card() {
+		Column column = new Column(0), original = new Column(0);
+		column.addElement(Card.King | Card.Colour);
+		original.addElement(Card.King | Card.Colour);
+		column.addElement(Card.Queen);
+		original.addElement(Card.Queen);
+		MoveMetaInformation info = column.move(Card.Queen, new MockCardContainer());
+		column.undo(Card.Queen, new MockCardContainer(), info);
+		assertEquals(original, column);
+	}
+
+	@Test
+	void undo_should_undo_move_multiple_cards() {
+		Column column = new Column(0), original = new Column(0);
+		column.addElement(Card.King | Card.Colour);
+		original.addElement(Card.King | Card.Colour);
+		column.addElement(Card.Queen);
+		original.addElement(Card.Queen);
+		Column column2 = new Column(0);
+		MoveMetaInformation info = column.move(Card.King | Card.Colour, column2);
+		column.undo(Card.King | Card.Colour, column2, info);
+		assertEquals(original, column, "Column was changed after move and undo.");
+		assertTrue(column2.isEmpty(), "Destination was not restored after undo.");
+	}
+
 }

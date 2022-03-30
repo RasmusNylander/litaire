@@ -11,8 +11,13 @@ class MockCardContainer implements CardContainer {
 
 	@Override
 	public MoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
-		assert false;
+		destination.receive(card);
 		return null;
+	}
+
+	@Override
+	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
+		assert false;
 	}
 
 	@Override
