@@ -89,6 +89,12 @@ class ColumnTest {
 	}
 
 	@Test
+	void should_accept_non_standard_king_when_empty() {
+		assertTrue(new Column(0).canAcceptCard(Card.King | Card.Type), "Does not accept alternate suit-type");
+		assertTrue(new Column(0).canAcceptCard(Card.King | Card.Colour), "Does not accept alternate suit-colour");
+	}
+
+	@Test
 	void should_not_accept_card_if_same_colour() {
 		Column column = new Column(0);
 		column.addElement(Card.Seven);

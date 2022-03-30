@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.Vector;
 
+import static model.Card.RankMask;
+
 class Column extends Vector<Integer> implements CardContainer {
 	protected Column(int numberOfCards) {
 		super(numberOfCards);
@@ -80,9 +82,9 @@ class Column extends Vector<Integer> implements CardContainer {
 
 	@Override
 	public boolean canAcceptCard(int card) {
-		if (isEmpty()) return card == Card.King;
+		if (isEmpty()) return (card & RankMask) == Card.King;
 		if ((card & Card.Colour) == (lastElement() & Card.Colour)) return false;
-		return (lastElement() & Card.RankMask) - (card & Card.RankMask) == 1;
+		return (lastElement() & RankMask) - (card & RankMask) == 1;
 	}
 
 	@Override
