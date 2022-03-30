@@ -153,4 +153,14 @@ class FoundationTest {
 		assertNotEquals(original, foundation);
 	}
 
+	@Test
+	void undo_should_undo_move() {
+		Foundation foundation = new Foundation(), original = new Foundation();
+		foundation.addAll(List.of(Card.Ace, Card.Two, Card.Three));
+		original.addAll(List.of(Card.Ace, Card.Two, Card.Three));
+		MoveMetaInformation info = foundation.move(Card.Three, new MockCardContainer());
+		foundation.undo(Card.Three, info);
+		assertEquals(original, foundation);
+	}
+
 }

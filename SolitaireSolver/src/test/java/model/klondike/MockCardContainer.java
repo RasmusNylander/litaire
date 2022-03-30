@@ -16,7 +16,7 @@ class MockCardContainer implements CardContainer {
 	}
 
 	@Override
-	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
+	public void undo(int card, @NotNull MoveMetaInformation moveMetaInformation) {
 		assert false;
 	}
 

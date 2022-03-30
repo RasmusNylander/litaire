@@ -41,12 +41,12 @@ class Foundation extends Stack<Integer> implements CardContainer {
 		if (!this.reachableCards().contains(card))
 			throw new IllegalMoveException("Error: Cannot move card: [" + Card.asString(card) + "] from Foundation: " + this);
 		destination.receive(this.pop());
-		return MoveMetaInformation.Empty;
+		return new MoveMetaInformation(destination);
 	}
 
 	@Override
-	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
-		destination.move(card, this);
+	public void undo(int card, @NotNull MoveMetaInformation moveMetaInformation) {
+		moveMetaInformation.destination.move(card, this);
 	}
 
 	@Override

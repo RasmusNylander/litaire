@@ -219,7 +219,7 @@ class ColumnTest {
 		column.addElement(Card.Queen);
 		original.addElement(Card.Queen);
 		MoveMetaInformation info = column.move(Card.Queen, new MockCardContainer());
-		column.undo(Card.Queen, new MockCardContainer(), info);
+		column.undo(Card.Queen, info);
 		assertEquals(original, column);
 	}
 
@@ -232,7 +232,7 @@ class ColumnTest {
 		original.addElement(Card.Queen);
 		Column column2 = new Column(0);
 		MoveMetaInformation info = column.move(Card.King | Card.Colour, column2);
-		column.undo(Card.King | Card.Colour, column2, info);
+		column.undo(Card.King | Card.Colour, info);
 		assertEquals(original, column, "Column was changed after move and undo.");
 		assertTrue(column2.isEmpty(), "Destination was not restored after undo.");
 	}

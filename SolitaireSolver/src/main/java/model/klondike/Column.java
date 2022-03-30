@@ -54,12 +54,12 @@ class Column extends Vector<Integer> implements CardContainer {
 			}
 			throw e;
 		}
-		return MoveMetaInformation.Empty;
+		return new MoveMetaInformation(destination);
 	}
 
 	@Override
-	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
-		destination.move(card, this);
+	public void undo(int card, @NotNull MoveMetaInformation moveMetaInformation) {
+		moveMetaInformation.destination.move(card, this);
 	}
 
 	@Override

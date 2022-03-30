@@ -91,11 +91,11 @@ class Stock implements CardContainer {
 		// TODO: Seemingly doesn't handle exception correctly. If receives fails, the state of this should be unchanged
 		int premoveWaste = waste();
 		destination.receive(this.take(card));
-		return new StockMoveMetaInformation(waste() + 1, premoveWaste);
+		return new StockMoveMetaInformation(destination, waste() + 1, premoveWaste);
 	}
 
 	@Override
-	public void undo(int card, CardContainer destination, MoveMetaInformation moveMetaInformation) {
+	public void undo(int card, @NotNull MoveMetaInformation moveMetaInformation) {
 		// TODO: implement this
 		assert false;
 	}
