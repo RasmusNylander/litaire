@@ -38,7 +38,7 @@ public abstract class Card {
 	public static String asString(int card) {
 		if (card == Unknown) return "??";
 		final String[] rankAsString = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
-		final String[] suitAsString = {"♠", "♣", "♥", "♦"};
+		final String[] suitAsString = {"♠", "♥", "♣", "♦"};
 		return suitAsString[(card & SuitMask) >> 4] + rankAsString[card & RankMask];
 	}
 
