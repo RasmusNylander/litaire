@@ -25,6 +25,8 @@ class StockMoveMetaInformation extends MoveMetaInformation {
 	}
 }
 
+public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns,
+                       @NotNull Stock stock) implements Solitaire {
 
 	public static Klondike newGame() {
 		Column[] columns = new Column[7];
@@ -45,20 +47,20 @@ class StockMoveMetaInformation extends MoveMetaInformation {
 
 	@Override
 	public void makeMove(@NotNull Move move) throws IllegalMoveException {
-		CardContainer mover = findMoveSource(move);
+		CardContainer mover = findSource(move.movedCard());
 		CardContainer destination = findDestination(move);
 		mover.move(move.movedCard(), destination);
 	}
 
 	@NotNull
-	private CardContainer findMoveSource(Move move) throws IllegalMoveException {
+	private CardContainer findSource(int card) throws IllegalMoveException {
 		for (Column column : columns)
-			if (column.reachableCards().contains(move.movedCard())) return column;
+			if (column.reachableCards().contains(card)) return column;
 		for (Foundation foundation : foundations)
-			if (foundation.reachableCards().contains(move.movedCard())) return foundation;
-		if (stock.reachableCards().contains(move.movedCard())) return stock;
+			if (foundation.reachableCards().contains(card)) return foundation;
+		if (stock.reachableCards().contains(card)) return stock;
 
-		throw new IllegalMoveException("Error: Cannot find moving card in move.");
+		throw new IllegalMoveException("Error: Cannot find card " + Card.asString(card) + " in any reachable card container.");
 	}
 
 	@NotNull
