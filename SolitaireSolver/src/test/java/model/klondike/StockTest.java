@@ -236,4 +236,16 @@ class StockTest {
 		assertEquals(1, stock.move(Card.Four, new MockCardContainer()).waste);
 	}
 
+	@Test
+	void undo_should_throw_exception_if_not_stock_move_meta_info() {
+		assertThrows(IllegalArgumentException.class, () -> new Stock().undo(Card.Ace, new MoveMetaInformation(new MockCardContainer())));
+	}
+
+	@Test
+	void undo_should_revert_state() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		StockMoveMetaInformation metaInfo = stock.move(Card.Three, new MockCardContainer());
+		stock.undo(Card.Three, metaInfo);
+		assertEquals(new Stock(Card.Ace, Card.Two, Card.Three, Card.Four), stock, "Stock should be reverted!");
+	}
 }

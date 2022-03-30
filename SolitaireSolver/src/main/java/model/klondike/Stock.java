@@ -5,9 +5,7 @@ import model.IllegalMoveException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 class Stock implements CardContainer {
 	private final int[] cards;
@@ -76,9 +74,15 @@ class Stock implements CardContainer {
 		return waste;
 	}
 
+	private boolean undoing = false;
 	@Override
 	public void receive(int... cards) throws IllegalMoveException {
-		throw new IllegalMoveException("Error: Stock can not receive cards");
+		if (!undoing) throw new IllegalMoveException("Error: Stock can not receive cards");
+		if (cards == null) throw new IllegalArgumentException("Error: Cards must not be null");
+		if (cards.length != 1)
+			throw new IllegalArgumentException("Error: Stock can only receive one card at a time as only one card can be removed at a time.");
+		addCard(cards[0], waste() + 1); //Undoing should be of the last move, and thus waste = index - 1
+		size++;
 	}
 
 	@Override
@@ -96,8 +100,12 @@ class Stock implements CardContainer {
 
 	@Override
 	public void undo(int card, @NotNull MoveMetaInformation moveMetaInformation) {
-		// TODO: implement this
-		assert false;
+		if (!(moveMetaInformation instanceof StockMoveMetaInformation stockMoveMetaInformation))
+			throw new IllegalArgumentException("Error: Move meta information is not of type StockMoveMetaInformation!");
+		undoing = true;
+		stockMoveMetaInformation.destination.move(card, this);
+		undoing = false;
+		waste = stockMoveMetaInformation.waste;
 	}
 
 	@NotNull
@@ -107,7 +115,7 @@ class Stock implements CardContainer {
 
 		Set<Integer> reachableCards = new HashSet<>();
 
-		// This could probably be done a lot nicer and faster
+		// This could probably be done a lot nicer and faster. Should probably be cached
 		// Add all cards continuing to draw from current position
 		for (int i = waste(); i < size(); i++) {
 			reachableCards.add(cards[i]);
@@ -118,6 +126,15 @@ class Stock implements CardContainer {
 		}
 
 		return reachableCards;
+	}
+
+	private void addCard(int card, int index) {
+		// This could be done better; cards would have to not be an array
+		if (index > size())
+			throw new IllegalArgumentException("Error: Cannot add card at index " + index + " to stock, as this would result in one or more empty spaces.\nNote: Index most at most be equal to current size of stock");
+		if (index < size()) // Shuffle all the cards along
+			System.arraycopy(cards, index, cards, index + 1, size() - index);
+		cards[index] = card;
 	}
 
 	private int removeCard(int card) {
