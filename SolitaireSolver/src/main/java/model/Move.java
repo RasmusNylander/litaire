@@ -14,6 +14,14 @@ public record Move(int movedCard, @NotNull Optional<Integer> destination) {
 		this.destination = destination;
 	}
 
+	public Move(int movedCard) {
+		this(movedCard, Optional.empty());
+	}
+
+	public Move(int movedCard, int destination) {
+		this(movedCard, Optional.of(destination));
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
