@@ -34,12 +34,12 @@ class StockTest {
 
 	@Test
 	void empty_size_should_be_0() {
-		assertEquals(0, Stock.Empty.size());
+		assertEquals(0, Stock.Empty.getNumberOfCards());
 	}
 
 	@Test
 	void size_should_be_2() {
-		assertEquals(2, new Stock(Card.Ace, Card.Eight | Card.Colour).size());
+		assertEquals(2, new Stock(Card.Ace, Card.Eight | Card.Colour).getNumberOfCards());
 	}
 
 	@Test
@@ -54,6 +54,7 @@ class StockTest {
 		assertThrows(IllegalArgumentException.class, () -> new Stock(cards));
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	void should_throw_exception_if_collection_is_null() {
 		assertThrows(IllegalArgumentException.class, () -> new Stock((Collection<Integer>) null));
@@ -191,6 +192,7 @@ class StockTest {
 		assertThrows(IllegalMoveException.class, () -> new Stock().receive(Card.Ace));
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	void move_should_throw_exception_if_destination_is_null() {
 		assertThrows(IllegalArgumentException.class, () -> new Stock().move(Card.Ace, null));
@@ -236,6 +238,7 @@ class StockTest {
 		assertEquals(1, stock.move(Card.Four, new MockCardContainer()).waste);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	void undo_should_throw_exception_if_not_stock_move_meta_info() {
 		assertThrows(IllegalArgumentException.class, () -> new Stock().undo(Card.Ace, new MoveMetaInformation(new MockCardContainer(), null)));
@@ -247,5 +250,11 @@ class StockTest {
 		StockMoveMetaInformation metaInfo = stock.move(Card.Three, new MockCardContainer());
 		stock.undo(Card.Three, metaInfo);
 		assertEquals(new Stock(Card.Ace, Card.Two, Card.Three, Card.Four), stock, "Stock should be reverted!");
+	}
+
+	@Test
+	void copy_should_be_equal() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		assertEquals(stock, stock.copy());
 	}
 }

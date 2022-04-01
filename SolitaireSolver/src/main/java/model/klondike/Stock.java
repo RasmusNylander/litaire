@@ -41,6 +41,13 @@ class Stock implements CardContainer {
 		this(intArrayFromIntegerCollection(cards));
 	}
 
+	@SuppressWarnings("CopyConstructorMissesField")
+	private Stock(Stock stock) {
+		this.cards = stock.cards;
+		this.size = stock.size;
+		this.waste = stock.waste;
+	}
+
 	private static int[] intArrayFromIntegerCollection(Collection<Integer> collection) {
 		Integer[] integerArray = collection.toArray(new Integer[0]);
 		int[] intArray = new int[integerArray.length];
@@ -109,9 +116,8 @@ class Stock implements CardContainer {
 		waste = stockMoveMetaInformation.waste;
 	}
 
-	@NotNull
 	@Contract(pure = true)
-	public Set<Integer> reachableCards() {
+	public @NotNull Set<Integer> reachableCards() {
 		if (isEmpty()) return Set.of();
 
 		Set<Integer> reachableCards = new HashSet<>();
@@ -151,8 +157,7 @@ class Stock implements CardContainer {
 		return index;
 	}
 
-	@NotNull
-	public Integer take(int card) {
+	public @NotNull Integer take(int card) {
 		// This can be sped up using a lookup table
 		if (!reachableCards().contains(card)) {
 			throw new IllegalArgumentException("Error: cannot take " + card + " from Stock as it is not reachable.\nReachable cards: " + reachableCards());
@@ -178,5 +183,10 @@ class Stock implements CardContainer {
 			result = 31 * result + cards[i]; // Arrays.hashCode(cards) but ignoring cards that are not in the stock
 		}
 		return result;
+	}
+
+	@Contract(pure = true)
+	public @NotNull Stock copy() {
+		return new Stock(this);
 	}
 }
