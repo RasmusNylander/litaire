@@ -54,7 +54,7 @@ class Column extends Vector<Integer> implements CardContainer {
 			}
 			throw e;
 		}
-		return new MoveMetaInformation(destination);
+		return new MoveMetaInformation(destination, this);
 	}
 
 	private boolean undoing = false;

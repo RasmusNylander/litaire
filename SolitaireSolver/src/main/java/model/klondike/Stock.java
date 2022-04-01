@@ -75,6 +75,7 @@ class Stock implements CardContainer {
 	}
 
 	private boolean undoing = false;
+
 	@Override
 	public void receive(int... cards) throws IllegalMoveException {
 		if (!undoing) throw new IllegalMoveException("Error: Stock can not receive cards");
@@ -95,7 +96,7 @@ class Stock implements CardContainer {
 		// TODO: Seemingly doesn't handle exception correctly. If receives fails, the state of this should be unchanged
 		int premoveWaste = waste();
 		destination.receive(this.take(card));
-		return new StockMoveMetaInformation(destination, waste() + 1, premoveWaste);
+		return new StockMoveMetaInformation(destination, this, waste() + 1, premoveWaste);
 	}
 
 	@Override

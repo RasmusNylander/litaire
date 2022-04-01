@@ -238,7 +238,7 @@ class StockTest {
 
 	@Test
 	void undo_should_throw_exception_if_not_stock_move_meta_info() {
-		assertThrows(IllegalArgumentException.class, () -> new Stock().undo(Card.Ace, new MoveMetaInformation(new MockCardContainer())));
+		assertThrows(IllegalArgumentException.class, () -> new Stock().undo(Card.Ace, new MoveMetaInformation(new MockCardContainer(), null)));
 	}
 
 	@Test

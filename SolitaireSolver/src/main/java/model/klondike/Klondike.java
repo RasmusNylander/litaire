@@ -1,17 +1,16 @@
 package model.klondike;
 
-import model.Card;
-import model.IllegalMoveException;
-import model.Move;
-import model.Solitaire;
+import model.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 class MoveMetaInformation {
-	public static MoveMetaInformation Empty = new MoveMetaInformation();
+	public final CardContainer destination, source;
 
-	protected MoveMetaInformation() {
+	public MoveMetaInformation(@NotNull CardContainer destination, @NotNull CardContainer source) {
+		this.destination = destination;
+		this.source = source;
 	}
 }
 
@@ -19,7 +18,8 @@ class StockMoveMetaInformation extends MoveMetaInformation {
 	public final int index;
 	public final int waste;
 
-	StockMoveMetaInformation(int index, int waste) {
+	StockMoveMetaInformation(@NotNull CardContainer destination, @NotNull CardContainer source, int index, int waste) {
+		super(destination, source);
 		this.index = index;
 		this.waste = waste;
 	}
