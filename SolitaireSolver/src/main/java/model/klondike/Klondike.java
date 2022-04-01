@@ -15,6 +15,7 @@ class MoveMetaInformation {
 }
 
 class StockMoveMetaInformation extends MoveMetaInformation {
+	//TODO: This that is is properly returned by the stock
 	public final int index;
 	public final int waste;
 
@@ -28,7 +29,10 @@ class StockMoveMetaInformation extends MoveMetaInformation {
 public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns,
                        @NotNull Stock stock) implements Solitaire {
 
-	public static Klondike newGame() {
+		moveHistory = new Stack<>();
+	}
+
+	public static Klondike newGame(@NotNull Stock stock) {
 		Column[] columns = new Column[7];
 		for (int i = 0; i < columns.length; i++) {
 			columns[i] = new Column(i);
@@ -38,9 +42,6 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		for (int i = 0; i < foundations.length; i++) {
 			foundations[i] = new Foundation();
 		}
-
-		Collection<Integer> stockCards = Arrays.asList(Card.fullDeck()).subList(0, 24);
-		Stock stock = new Stock(stockCards);
 
 		return new Klondike(foundations, columns, stock);
 	}
@@ -135,23 +136,23 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		return moves;
 	}
 
-	private Collection<Move> stockMoves(){
+	private Collection<Move> stockMoves() {
 		Collection<Move> moves = new ArrayList<>();
 
-		if(stock.isEmpty()){
+		if (stock.isEmpty()) {
 			return moves;
 		}
 
 		Set<Integer> stockCards = stock.reachableCards();
-		for (Integer card : stockCards){
-			for(Foundation foundation : foundations){
-				if(foundation.canAcceptCard(card)){
+		for (Integer card : stockCards) {
+			for (Foundation foundation : foundations) {
+				if (foundation.canAcceptCard(card)) {
 					moves.add(new Move(card, foundation.asDestination()));
 					break;
 				}
 			}
-			for(Column column : columns){
-				if(column.canAcceptCard(card)){
+			for (Column column : columns) {
+				if (column.canAcceptCard(card)) {
 					moves.add(new Move(card, column.asDestination()));
 				}
 			}
@@ -159,16 +160,16 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		return moves;
 	}
 
-	private Collection<Move> foundationMoves(Foundation foundation){
+	private Collection<Move> foundationMoves(Foundation foundation) {
 		Collection<Move> moves = new ArrayList<>();
 
-		if(foundation.isEmpty()){
+		if (foundation.isEmpty()) {
 			return moves;
 		}
 
 		Integer topcard = foundation.peek();
-		for(Column column : columns){
-			if(column.canAcceptCard(topcard)){
+		for (Column column : columns) {
+			if (column.canAcceptCard(topcard)) {
 				moves.add(new Move(topcard, column.asDestination()));
 			}
 		}
