@@ -64,8 +64,6 @@ class Column extends Vector<Integer> implements CardContainer {
 
 	@Override
 	public void receive(int... cards) throws IllegalMoveException {
-		if (!canAcceptCard(cards[0]))
-			throw new IllegalMoveException("Error: Card " + Card.asString(cards[0]) + " cannot be moved to the column.");
 		for (int i = 0; i < cards.length; i++) {
 			if (!canAcceptCard(cards[i])) {
 				this.removeRange(size() - i, size());
