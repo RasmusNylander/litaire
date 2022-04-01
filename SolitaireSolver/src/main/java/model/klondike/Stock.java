@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-class Stock implements CardContainer {
+public class Stock implements CardContainer {
 	private final int[] cards;
 	private int size;
 	private int waste;
