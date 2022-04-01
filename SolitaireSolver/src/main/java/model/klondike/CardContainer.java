@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-public interface CardContainer {
+interface CardContainer {
 	MoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException;
 
 	void undo(int card, @NotNull MoveMetaInformation moveMetaInformation);
@@ -22,5 +22,4 @@ public interface CardContainer {
 	boolean isEmpty();
 
 	int getNumberOfCards();
-
 }
