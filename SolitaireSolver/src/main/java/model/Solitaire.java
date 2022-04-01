@@ -10,6 +10,13 @@ public interface Solitaire {
 
 	void makeMove(@NotNull Move move) throws IllegalMoveException;
 
-	//void undoMove(@NotNull Move move) throws IllegalMoveException;
+	/**
+	 * Undoes the last move made, restoring the state before the move. This means that
+	 * it can be called multiple times, to undo multiple moves.
+	 *
+	 * @throws EmptyHistoryException if there are no moves to undo
+	 */
+	void undoMove() throws EmptyHistoryException;
+
 	boolean isLegalMove(@NotNull Move move);
 }

@@ -1,6 +1,7 @@
 package model.klondike;
 
 import model.*;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -26,10 +27,27 @@ class StockMoveMetaInformation extends MoveMetaInformation {
 	}
 }
 
-public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] columns,
-                       @NotNull Stock stock) implements Solitaire {
+record MoveHistoryRecord(Move move, MoveMetaInformation info) {
+}
 
-		moveHistory = new Stack<>();
+public final class Klondike implements Solitaire {
+	public final Foundation @NotNull [] foundations;
+	public final Column @NotNull [] columns;
+	public final @NotNull Stock stock;
+
+	private final @NotNull Stack<MoveHistoryRecord> moveHistory;
+
+	private Klondike(Foundation @NotNull [] foundations, Column @NotNull [] columns, @NotNull Stock stock, @NotNull Stack<MoveHistoryRecord> moveHistory) {
+		this.foundations = foundations;
+		this.columns = columns;
+		this.stock = stock;
+		this.moveHistory = moveHistory;
+	}
+
+	public Klondike(@NotNull Foundation @NotNull [] foundations,
+	                @NotNull Column @NotNull [] columns,
+	                @NotNull Stock stock) {
+		this(foundations, columns, stock, new Stack<>());
 	}
 
 	public static Klondike newGame(@NotNull Stock stock) {
@@ -50,7 +68,19 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 	public void makeMove(@NotNull Move move) throws IllegalMoveException {
 		CardContainer mover = findSource(move.movedCard());
 		CardContainer destination = findDestination(move);
-		mover.move(move.movedCard(), destination);
+		MoveMetaInformation info = mover.move(move.movedCard(), destination);
+		MoveHistoryRecord record = new MoveHistoryRecord(move, info);
+		moveHistory.push(record);
+	}
+
+	@Override
+	public void undoMove() {
+		if (moveHistory.isEmpty())
+			throw new EmptyHistoryException("Error: Move history is empty; there is no move to undo!");
+		MoveHistoryRecord record = moveHistory.pop();
+		CardContainer source = record.info().source;
+		int card = record.move().movedCard();
+		source.undo(card, record.info());
 	}
 
 	@NotNull
@@ -71,7 +101,7 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 				if (column.asDestination().equals(move.destination())) return column;
 			for (Foundation foundation : foundations)
 				if (foundation.asDestination().equals(move.destination())) return foundation;
-			throw new IllegalMoveException("Error: Cannot find destination in move.");
+			throw new IllegalMoveException("Error: Cannot find destination in move.\nMove: " + move);
 		}
 
 		if ((move.movedCard() & Card.RankMask) == Card.King) {
@@ -84,7 +114,7 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 				if (foundation.isEmpty()) return foundation;
 		}
 
-		throw new IllegalMoveException("Error: Cannot find destination in move.");
+		throw new IllegalMoveException("Error: Cannot find destination in move.\nMove: " + move);
 	}
 
 	@Override
@@ -176,4 +206,30 @@ public record Klondike(@NotNull Foundation[] foundations, @NotNull Column[] colu
 		return moves;
 	}
 
+	/**
+	 * Returns whether the <b>current<b/> state of the games are equal. I.e. calling undo() on both games
+	 * will not necessarily result in the same state.
+	 *
+	 * @return true if the states are equal, false otherwise
+	 */
+	@Contract(value = "null -> false", pure = true)
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Klondike klondike = (Klondike) o;
+		return Arrays.equals(foundations, klondike.foundations) && Arrays.equals(columns, klondike.columns) && stock.equals(klondike.stock);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = stock.hashCode();
+		result = 31 * result + Arrays.hashCode(foundations);
+		result = 31 * result + Arrays.hashCode(columns);
+		return result;
+	}
+
+	public Klondike deepCopy() {
+		return new Klondike(foundations.clone(), columns.clone(), stock.copy());
+	}
 }

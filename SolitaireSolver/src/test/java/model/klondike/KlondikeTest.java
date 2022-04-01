@@ -188,8 +188,8 @@ class KlondikeTest {
 	@Test
 	void should_not_be_possible_to_move_non_ace_from_stock_to_empty_foundation(){
 		Foundation[] foundations = new Foundation[]{new Foundation()};
-		Stock stock = new Stock(Card.Two); 
-		Klondike klondike = new Klondike( foundations, new Column[0], stock);
+		Stock stock = new Stock(Card.Two);
+		Klondike klondike = new Klondike(foundations, new Column[0], stock);
 		assertTrue(klondike.possibleMoves().isEmpty());
 	}
 
@@ -282,7 +282,7 @@ class KlondikeTest {
 	@Test
 	void legal_move_should_return_false_if_moving_card_is_not_in_game() {
 		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
-		assertFalse(klondike.isLegalMove(new Move(0, Optional.empty())));
+		assertFalse(klondike.isLegalMove(new Move(0)));
 	}
 
 	@Test
@@ -293,8 +293,8 @@ class KlondikeTest {
 		columns[0].reveal(Card.Four | Card.Colour, 0);
 		columns[1].reveal(Card.Five, 2);
 		Klondike klondike = new Klondike(foundations, columns, Stock.Empty);
-		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Three | Card.Colour))));
-		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Five))));
+		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Card.Three | Card.Colour)));
+		assertTrue(klondike.isLegalMove(new Move(Card.Four | Card.Colour, Card.Five)));
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -307,7 +307,7 @@ class KlondikeTest {
 	@Test
 	void make_move_should_throw_exception_if_moving_card_not_contained() {
 		Klondike klondike = new Klondike(new Foundation[0], new Column[0], new Stock(1));
-		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(0, Optional.empty())));
+		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(0)));
 	}
 
 	@Test
@@ -315,14 +315,14 @@ class KlondikeTest {
 		Foundation[] foundations = new Foundation[]{new Foundation()};
 		foundations[0].addElement(Card.Three | Card.Colour);
 		Klondike klondike = new Klondike(foundations, new Column[]{new Column(0)}, Stock.Empty);
-		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(Card.Three | Card.Colour, Optional.of(Card.Four))));
+		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(Card.Three | Card.Colour, Card.Four)));
 	}
 
 	@Test
 	void make_move_should_move_card_from_stock() {
 		Stock stock = new Stock(Card.Ace);
 		Klondike klondike = new Klondike(new Foundation[]{new Foundation(), new Foundation()}, new Column[0], stock);
-		klondike.makeMove(new Move(Card.Ace, Optional.empty()));
+		klondike.makeMove(new Move(Card.Ace));
 		assertTrue(stock.isEmpty());
 	}
 
@@ -331,7 +331,7 @@ class KlondikeTest {
 		Foundation foundation = new Foundation();
 		foundation.addElement(Card.King);
 		Klondike klondike = new Klondike(new Foundation[]{foundation}, new Column[]{new Column(0)}, Stock.Empty);
-		klondike.makeMove(new Move(Card.King, Optional.empty()));
+		klondike.makeMove(new Move(Card.King));
 		assertTrue(foundation.isEmpty());
 	}
 
@@ -341,7 +341,7 @@ class KlondikeTest {
 		columns[0].addElement(Card.Four | Card.Colour);
 		columns[1].addElement(Card.Five);
 		Klondike klondike = new Klondike(new Foundation[0], columns, Stock.Empty);
-		klondike.makeMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Five)));
+		klondike.makeMove(new Move(Card.Four | Card.Colour, Card.Five));
 		assertEquals(Card.Four | Card.Colour, columns[1].lastElement());
 	}
 
@@ -350,7 +350,7 @@ class KlondikeTest {
 		Foundation[] foundations = new Foundation[]{new Foundation(), new Foundation()};
 		foundations[0].addElement(Card.Three | Card.Colour);
 		Klondike klondike = new Klondike(foundations, new Column[0], new Stock(Card.Four | Card.Colour));
-		klondike.makeMove(new Move(Card.Four | Card.Colour, Optional.of(Card.Three | Card.Colour)));
+		klondike.makeMove(new Move(Card.Four | Card.Colour, Card.Three | Card.Colour));
 		assertEquals(Card.Four | Card.Colour, foundations[0].peek());
 	}
 
@@ -359,7 +359,101 @@ class KlondikeTest {
 		Foundation[] foundations = new Foundation[]{new Foundation(), new Foundation()};
 		foundations[0].addElement(Card.Three | Card.Colour);
 		Klondike klondike = new Klondike(foundations, new Column[0], new Stock(Card.Four | Card.Colour));
-		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(Card.Four | Card.Colour, Optional.empty())));
+		assertThrows(IllegalMoveException.class, () -> klondike.makeMove(new Move(Card.Four | Card.Colour)));
 	}
+
+	@Test
+	void identical_objects_should_be_equal() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
+		assertEquals(klondike, klondike);
+	}
+
+	@Test
+	void different_type_of_objects_should_not_be_equal() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
+		assertNotEquals(klondike, new Object());
+	}
+
+	@Test
+	void different_objects_identical_content_should_be_equal() {
+		Foundation[] foundations = new Foundation[0];
+		Column[] columns = new Column[0];
+		Stock stock = Stock.Empty;
+		Klondike klondike1 = new Klondike(foundations, columns, stock);
+		Klondike klondike2 = new Klondike(foundations, columns, stock);
+		assertEquals(klondike1, klondike2);
+	}
+
+	@Test
+	void should_be_equal_if_equal_content() {
+		Klondike klondike1 = new Klondike(new Foundation[]{new Foundation()}, new Column[]{new Column(13)}, new Stock(Card.Ace, Card.Two));
+		Klondike klondike2 = new Klondike(new Foundation[]{new Foundation()}, new Column[]{new Column(13)}, new Stock(Card.Ace, Card.Two));
+		assertEquals(klondike1, klondike2);
+	}
+
+	@Test
+	void should_not_be_equal_after_move() {
+		Klondike klondike1 = new Klondike(new Foundation[]{new Foundation()}, new Column[0], new Stock(Card.Ace));
+		Klondike klondike2 = new Klondike(new Foundation[]{new Foundation()}, new Column[0], new Stock(Card.Ace));
+		klondike1.makeMove(new Move(Card.Ace));
+		assertNotEquals(klondike1, klondike2);
+	}
+
+	@Test
+	void should_be_equal_after_move_and_undo() {
+		Klondike klondike1 = new Klondike(new Foundation[]{new Foundation()}, new Column[0], new Stock(Card.Ace));
+		Klondike klondike2 = new Klondike(new Foundation[]{new Foundation()}, new Column[0], new Stock(Card.Ace));
+		klondike1.makeMove(new Move(Card.Ace));
+		klondike1.undoMove();
+		assertEquals(klondike1, klondike2);
+	}
+
+	@Test
+	void should_be_equal_after_move_to_same_state_from_different_states() {
+		Klondike klondike1 = new Klondike(new Foundation[]{new Foundation()}, new Column[]{new Column(0)}, new Stock(Card.Ace));
+		Klondike klondike2 = new Klondike(new Foundation[]{new Foundation()}, new Column[]{new Column(0, Card.Ace)}, Stock.Empty);
+		klondike1.makeMove(new Move(Card.Ace));
+		klondike2.makeMove(new Move(Card.Ace));
+		assertEquals(klondike1, klondike2);
+	}
+
+	@Test
+	void undo_move_should_throw_exception_if_no_moves_made() {
+		Klondike klondike = new Klondike(new Foundation[0], new Column[0], Stock.Empty);
+		assertThrows(EmptyHistoryException.class, klondike::undoMove);
+	}
+
+	@Test
+	void undo_move_should_undo_last_move() {
+		Stock stock = new Stock(Card.Ace);
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Klondike klondike = new Klondike(foundations, new Column[0], stock);
+		klondike.makeMove(new Move(Card.Ace));
+		klondike.undoMove();
+		assertFalse(stock.isEmpty(), "Stock should not be empty - Moved card should have been returned.");
+		assertTrue(foundations[0].isEmpty(), "Foundation should be empty - Card should have been taken back.");
+	}
+
+	@Test
+	void undo_move_should_undo_multiple_moves() {
+		// I know five moves is very excessive, but I just really, really want to.
+		// I'm sorry, but I'm not going to change it.
+		Move[] moves = new Move[]{
+				new Move(Card.Ace),
+				new Move(Card.King),
+				new Move(Card.Three, Card.Four | Card.Colour),
+				new Move(Card.Two, Card.Ace),
+				new Move(Card.Three, Card.Two)};
+
+		Stock stock = new Stock(Card.Two, Card.Three, Card.King);
+		Foundation[] foundations = new Foundation[]{new Foundation()};
+		Column[] columns = new Column[]{new Column(0, Card.Ace), new Column(2, Card.Four | Card.Colour)};
+		Klondike klondike = new Klondike(foundations, columns, stock);
+		Klondike originalState = klondike.deepCopy();
+		for (Move move : moves) klondike.makeMove(move); // Again, I'm sorry, but it's not going to change.
+		for (Move move : moves) klondike.undoMove();
+		assertEquals(originalState, klondike);
+	}
+
 
 }
