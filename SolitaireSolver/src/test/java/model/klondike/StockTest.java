@@ -66,6 +66,11 @@ class StockTest {
 	}
 
 	@Test
+	void should_throw_exception_if_card_is_not_valid() {
+		assertThrows(IllegalArgumentException.class, () -> new Stock(-1));
+	}
+
+	@Test
 	void reachableCards_should_not_be_null() {
 		assertNotNull(new Stock().reachableCards());
 	}
@@ -257,4 +262,5 @@ class StockTest {
 		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
 		assertEquals(stock, stock.copy());
 	}
+
 }

@@ -17,16 +17,16 @@ class Stock implements CardContainer {
 	public Stock(int... cards) {
 		if (cards == null)
 			throw new IllegalArgumentException("Error: Cards must not be null");
-		for (Integer card : cards) {
-			if (card == null)
-				throw new IllegalArgumentException("Error: Card must not be null"); // Might not be reachable anymore
+		for (int card : cards) {
 			if ((card & Card.RankMask) == Card.Unknown)
 				throw new IllegalArgumentException("Error: Stock can not be updated, thus card may not be unknown");
+			if (!Card.isValidCard(card))
+				throw new IllegalArgumentException("Error: Card is not a valid card. Card: " + card);
 
 			// This is slow, but it need only be done once, so it's fine
 			int duplicates = -1;
-			for (Integer otherCard : cards) {
-				if (otherCard.equals(card))
+			for (int otherCard : cards) {
+				if (card == otherCard)
 					duplicates++;
 			}
 			if (duplicates > 0)
