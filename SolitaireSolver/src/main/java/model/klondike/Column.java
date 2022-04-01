@@ -98,7 +98,7 @@ class Column implements CardContainer {
 		for (int i = 0; i < size(); i++) {
 			if (cards[i] == card) return i;
 		}
-		return 0;
+		throw new NoSuchElementException("Error: Card " + Card.asString(card) + " not found in Column: " + this);
 	}
 
 	private boolean undoing = false;

@@ -287,4 +287,9 @@ class ColumnTest {
 	void should_throw_exception_if_known_cards_contain_unknown_card() {
 		assertThrows(IllegalArgumentException.class, () -> new Column(0, Card.Unknown, Card.Ace), "Column should not be created with Unknown card in known cards.");
 	}
+
+	@Test
+	void should_throw_exception_if_number_of_cards_is_negative() {
+		assertThrows(IllegalArgumentException.class, () -> new Column(-1), "Column should not be created with negative number of cards.");
+	}
 }

@@ -104,10 +104,12 @@ class FoundationTest {
 		assertTrue(foundation.reachableCards().contains(Card.Three | Card.Colour));
 	}
 
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	@Test
 	void receive_cards_should_throw_exception_when_cannot_accept_card() {
+		assertThrows(IllegalMoveException.class, () -> new Foundation().receive(Card.Unknown), "Cannot receive Unknown card"); // TODO: Move to separate test
+
 		Foundation foundation = new Foundation();
-		assertThrows(IllegalMoveException.class, () -> new Foundation().receive(Card.Unknown), "Cannot receive Unknown card");
 		foundation.addElement(Card.Five | Card.Colour);
 		assertThrows(IllegalMoveException.class, () -> new Foundation().receive((Card.Six | Card.Type)));
 	}
@@ -116,7 +118,7 @@ class FoundationTest {
 	void receive_cards_should_add_card_to_foundation() {
 		Foundation foundation = new Foundation();
 		foundation.receive(Card.Ace | Card.Colour);
-		assertEquals(1, foundation.size());
+		assertEquals(1, foundation.getNumberOfCards());
 	}
 
 	@Test
