@@ -145,7 +145,7 @@ public final class Klondike implements Solitaire {
 		if (column.isEmpty())
 			return moves;
 
-		Integer topCard = column.lastElement();
+		int topCard = column.lastCard();
 		for (Foundation foundation : foundations) {
 			if (foundation.canAcceptCard(topCard)) {
 				moves.add(new Move(topCard, foundation.asDestination()));
@@ -153,9 +153,8 @@ public final class Klondike implements Solitaire {
 			}
 		}
 
-		for (Integer card : column) {
-			if ((card & Card.RankMask) == Card.Unknown)
-				continue;
+		Set<Integer> reachableCards = column.reachableCards();
+		for (Integer card : reachableCards) {
 			for (Column kloumn : this.columns) {
 				if (kloumn == column) continue;
 				if (!kloumn.canAcceptCard(card)) continue;
