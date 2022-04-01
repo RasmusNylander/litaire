@@ -20,11 +20,24 @@ class ColumnTest {
 		assertFalse(new Column(1).isEmpty());
 	}
 
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	@Test
 	void should_contain_unknown_card() {
 		Column column = new Column(2);
 		assertEquals(Card.Unknown, column.get(0));
 		assertEquals(Card.Unknown, column.get(1));
+	}
+
+	@Test
+	void should_have_size_two() {
+		Column column = new Column(1, Card.Ace);
+		assertEquals(2, column.getNumberOfCards());
+	}
+
+	@Test
+	void should_contain_ace() {
+		Column column = new Column(1, Card.Ace);
+		assertTrue(column.contains(Card.Ace));
 	}
 
 	@Test
@@ -65,6 +78,7 @@ class ColumnTest {
 		assertEquals(Optional.of(Card.Six | Card.Colour), column.asDestination());
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Test
 	void should_throw_exception_if_card_is_unknown() {
 		Column column = new Column(1);

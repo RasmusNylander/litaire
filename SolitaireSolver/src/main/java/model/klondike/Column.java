@@ -13,9 +13,17 @@ import java.util.Vector;
 import static model.Card.RankMask;
 
 class Column extends Vector<Integer> implements CardContainer {
-	protected Column(int numberOfCards) {
-		super(numberOfCards);
-		for (int i = 0; i < numberOfCards; i++) {
+
+	protected Column(int numberOfUnknownCards, int... knownCards) {
+		this(numberOfUnknownCards);
+		for (int card : knownCards) {
+			add(card);
+		}
+	}
+
+	protected Column(int numberOfUnknownCards) {
+		super(numberOfUnknownCards);
+		for (int i = 0; i < numberOfUnknownCards; i++) {
 			this.add(Card.Unknown);
 		}
 	}
