@@ -57,13 +57,25 @@ class Column extends Vector<Integer> implements CardContainer {
 		return new MoveMetaInformation(destination);
 	}
 
+	private boolean undoing = false;
 	@Override
 	public void undo(int card, @NotNull MoveMetaInformation moveMetaInformation) {
-		moveMetaInformation.destination.move(card, this);
+		//This is really not very elegant, but it will have to do for now.
+		undoing = true;
+		try {
+			moveMetaInformation.destination.move(card, this);
+		} finally {
+			undoing = false;
+		}
 	}
 
 	@Override
 	public void receive(int... cards) throws IllegalMoveException {
+		if (undoing) {
+			for (int card : cards) this.add(card);
+			return;
+		}
+
 		for (int i = 0; i < cards.length; i++) {
 			if (!canAcceptCard(cards[i])) {
 				this.removeRange(size() - i, size());

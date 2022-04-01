@@ -237,4 +237,12 @@ class ColumnTest {
 		assertTrue(column2.isEmpty(), "Destination was not restored after undo.");
 	}
 
+	@Test
+	void undo_should_not_throw_exception_if_moving_card_onto_unknown() {
+		Column column = new Column(1);
+		column.addElement(Card.Ace);
+		MoveMetaInformation info = column.move(Card.Ace, new MockCardContainer());
+		assertDoesNotThrow(() -> column.undo(Card.Ace, info));
+	}
+
 }
