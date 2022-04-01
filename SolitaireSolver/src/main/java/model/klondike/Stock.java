@@ -91,7 +91,6 @@ public class Stock implements CardContainer {
 		if (cards.length != 1)
 			throw new IllegalArgumentException("Error: Stock can only receive one card at a time as only one card can be removed at a time.");
 		addCard(cards[0], waste() + 1); //Undoing should be of the last move, and thus waste = index - 1
-		size++;
 	}
 
 	@Override
@@ -101,9 +100,15 @@ public class Stock implements CardContainer {
 
 	@Override
 	public StockMoveMetaInformation move(int card, @NotNull CardContainer destination) throws IllegalMoveException {
-		// TODO: Seemingly doesn't handle exception correctly. If receives fails, the state of this should be unchanged
 		int premoveWaste = waste();
-		destination.receive(this.take(card));
+		int kard = take(card); // This will ensure that the card is reachable, and only if it is, will it be removed
+		try {
+			destination.receive(kard);
+		} catch (IllegalMoveException e) {
+			addCard(card, waste() + 1);
+			waste = premoveWaste;
+			throw e;
+		}
 		return new StockMoveMetaInformation(destination, this, waste() + 1, premoveWaste);
 	}
 
@@ -143,6 +148,7 @@ public class Stock implements CardContainer {
 		if (index < size()) // Shuffle all the cards along
 			System.arraycopy(cards, index, cards, index + 1, size() - index);
 		cards[index] = card;
+		size++;
 	}
 
 	private int removeCard(int card) {
@@ -158,7 +164,7 @@ public class Stock implements CardContainer {
 		return index;
 	}
 
-	public @NotNull Integer take(int card) {
+	int take(int card) {
 		// This can be sped up using a lookup table
 		if (!reachableCards().contains(card)) {
 			throw new IllegalArgumentException("Error: cannot take " + card + " from Stock as it is not reachable.\nReachable cards: " + reachableCards());
@@ -207,7 +213,7 @@ public class Stock implements CardContainer {
 	}
 
 	@Contract(pure = true)
-	public @NotNull Stock copy() {
+	@NotNull Stock copy() {
 		return new Stock(this);
 	}
 }

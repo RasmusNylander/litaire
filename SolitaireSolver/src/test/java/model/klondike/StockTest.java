@@ -243,6 +243,16 @@ class StockTest {
 		assertEquals(1, stock.move(Card.Four, new MockCardContainer()).waste);
 	}
 
+	@Test
+	void move_should_not_modify_stock_if_throws_exception() {
+		Stock original = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		Stock stock = original.copy();
+		MockCardContainer destination = new MockCardContainer();
+		destination.canReceive = false;
+		assertThrows(IllegalMoveException.class, () -> stock.move(Card.Three, destination));
+		assertEquals(original, stock);
+	}
+
 	@SuppressWarnings("ConstantConditions")
 	@Test
 	void undo_should_throw_exception_if_not_stock_move_meta_info() {
@@ -261,6 +271,54 @@ class StockTest {
 	void copy_should_be_equal() {
 		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
 		assertEquals(stock, stock.copy());
+	}
+
+	@Test
+	void identical_stocks_should_be_equal() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		assertEquals(stock, stock);
+	}
+
+	@Test
+	void stock_with_same_content_should_be_equal() {
+		Stock stock1 = new Stock(Card.King | Card.Type | Card.Colour, Card.Two, Card.Seven | Card.Type, Card.Four);
+		Stock stock2 = new Stock(Card.King | Card.Type | Card.Colour, Card.Two, Card.Seven | Card.Type, Card.Four);
+		assertEquals(stock1, stock2);
+	}
+
+	@Test
+	void stock_with_different_size_should_not_be_equal() {
+		Stock stock1 = new Stock(Card.King, Card.Two);
+		Stock stock2 = new Stock(Card.King);
+		assertNotEquals(stock1, stock2);
+	}
+
+	@Test
+	void stock_with_different_content_should_not_be_equal() {
+		Stock stock1 = new Stock(Card.King | Card.Type | Card.Colour, Card.Two, Card.Seven | Card.Type, Card.Four);
+		Stock stock2 = new Stock(Card.King | Card.Type | Card.Colour, Card.Two, Card.Five | Card.Type, Card.Four);
+		assertNotEquals(stock1, stock2);
+	}
+
+	@Test
+	void stock_with_different_wastes_should_not_be_equal() {
+		Stock stock1 = new Stock(Card.King, Card.Two, Card.Four);
+		Stock stock2 = new Stock(Card.King, Card.Two, Card.Seven, Card.Four);
+		stock2.move(Card.Seven, new MockCardContainer());
+		assertNotEquals(stock1, stock2);
+	}
+
+	@Test
+	void identical_stocks_should_have_same_hashcode() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
+		assertEquals(stock.hashCode(), stock.hashCode());
+	}
+
+	@Test
+	void stock_with_same_content_should_have_same_hashcode() {
+		Stock stock1 = new Stock(Card.King | Card.Type | Card.Colour, Card.Two, Card.Seven | Card.Type, Card.Four);
+		Stock stock2 = new Stock(Card.King | Card.Type | Card.Colour, Card.Two, Card.Seven | Card.Type, Card.Four);
+		assertEquals(stock1.hashCode(), stock2.hashCode());
 	}
 
 }
