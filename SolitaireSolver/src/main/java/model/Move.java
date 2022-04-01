@@ -29,10 +29,9 @@ public record Move(int movedCard, @NotNull Optional<Integer> destination) {
 
 
 	@Override
-	public String toString() {
-		return "Move[" +
-				"movedCard=" + movedCard + ", " +
-				"destination=" + destination + ']';
+	public @NotNull String toString() {
+		String destination = this.destination.map(Card::asString).orElse("empty");
+		return Card.asString(movedCard) + " → " + destination;
 	}
 
 }
