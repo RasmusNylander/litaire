@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class Stock implements CardContainer {
 	private final int[] cards;
@@ -183,6 +184,26 @@ public class Stock implements CardContainer {
 			result = 31 * result + cards[i]; // Arrays.hashCode(cards) but ignoring cards that are not in the stock
 		}
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		Function<Integer, String> cardToColouredString = card -> {
+			final String ANSI_RED = "\u001B[31m";
+			final String ANSI_GREEN = "\u001B[32m";
+			final String ANSI_RESET = "\u001B[0m";
+			if (cards[waste()] == card) return ANSI_RED + Card.asString(card) + ANSI_RESET;
+			if (reachableCards().contains(card)) return ANSI_GREEN + Card.asString(card) + ANSI_RESET;
+			return Card.asString(card);
+		};
+
+		StringBuilder sb = new StringBuilder("[");
+		if (!isEmpty())
+			sb.append(cardToColouredString.apply(cards[0]));
+		for (int i = 1; i < size(); i++) {
+			sb.append(", ").append(cardToColouredString.apply(cards[i]));
+		}
+		return sb.append("]").toString();
 	}
 
 	@Contract(pure = true)
