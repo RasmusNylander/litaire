@@ -246,7 +246,7 @@ class StockTest {
 	@Test
 	void move_should_not_modify_stock_if_throws_exception() {
 		Stock original = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
-		Stock stock = original.copy();
+		Stock stock = new Stock(original);
 		MockCardContainer destination = new MockCardContainer();
 		destination.canReceive = false;
 		assertThrows(IllegalMoveException.class, () -> stock.move(Card.Three, destination));
@@ -270,13 +270,13 @@ class StockTest {
 	@Test
 	void copy_should_be_equal() {
 		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
-		assertEquals(stock, stock.copy());
+		assertEquals(stock, new Stock(stock));
 	}
 
 	@Test
 	void changing_original_should_not_change_copy() {
 		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three);
-		Stock copy = stock.copy();
+		Stock copy = new Stock(stock);
 		stock.move(Card.Three, new MockCardContainer());
 		assertEquals(new Stock(Card.Ace, Card.Two, Card.Three), copy);
 	}

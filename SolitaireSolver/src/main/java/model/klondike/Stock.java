@@ -45,7 +45,7 @@ public class Stock implements CardContainer {
 	}
 
 	@SuppressWarnings("CopyConstructorMissesField")
-	private Stock(Stock stock) {
+	public Stock(Stock stock) {
 		this.cards = stock.cards;
 		this.size = stock.size;
 		this.waste = stock.waste;
@@ -214,8 +214,4 @@ public class Stock implements CardContainer {
 		return sb.append("]").toString();
 	}
 
-	@Contract(pure = true)
-	@NotNull Stock copy() {
-		return new Stock(this);
-	}
 }

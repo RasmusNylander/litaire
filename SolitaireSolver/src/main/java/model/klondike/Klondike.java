@@ -231,6 +231,6 @@ public final class Klondike implements Solitaire {
 	}
 
 	public Klondike deepCopy() {
-		return new Klondike(foundations.clone(), columns.clone(), stock.copy());
+		return new Klondike(foundations.clone(), columns.clone(), new Stock(stock));
 	}
 }
