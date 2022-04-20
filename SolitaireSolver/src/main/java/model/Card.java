@@ -1,5 +1,9 @@
 package model;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+
 public abstract class Card {
 	public static final int Ace = 0;
 	public static final int Two = 1;
@@ -40,6 +44,10 @@ public abstract class Card {
 		final String[] rankAsString = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
 		final String[] suitAsString = {"♠", "♥", "♣", "♦"};
 		return suitAsString[(card & SuitMask) >> 4] + rankAsString[card & RankMask];
+	}
+
+	public static String[] asString(int @NotNull ... cards) {
+		return Arrays.stream(cards).mapToObj(Card::asString).toArray(String[]::new);
 	}
 
 	public static boolean isValidCard(int card) {
