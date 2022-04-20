@@ -147,10 +147,10 @@ public final class Klondike implements Solitaire {
 
 		int topCard = column.lastCard();
 		for (Foundation foundation : foundations) {
-			if (foundation.canAcceptCard(topCard)) {
-				moves.add(new Move(topCard, foundation.asDestination()));
-				break;
-			}
+			if (!foundation.canAcceptCard(topCard))
+				continue;
+			moves.add(new Move(topCard, foundation.asDestination()));
+			break;
 		}
 
 		Set<Integer> reachableCards = column.reachableCards();
@@ -196,10 +196,12 @@ public final class Klondike implements Solitaire {
 			return moves;
 		}
 
-		Integer topcard = foundation.peek();
+		Set<Integer> foundationCards = foundation.reachableCards();
+		assert foundationCards.size() == 1;
+		Integer card = foundationCards.iterator().next();
 		for (Column column : columns) {
-			if (column.canAcceptCard(topcard)) {
-				moves.add(new Move(topcard, column.asDestination()));
+			if (column.canAcceptCard(card)) {
+				moves.add(new Move(card, column.asDestination()));
 			}
 		}
 		return moves;
