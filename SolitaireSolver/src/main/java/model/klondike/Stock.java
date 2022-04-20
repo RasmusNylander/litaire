@@ -154,7 +154,8 @@ public class Stock implements CardContainer {
 		return index;
 	}
 
-	int take(int card) {
+
+	protected int take(int card) {
 		// This can be sped up using a lookup table
 		if (!reachableCards().contains(card)) {
 			throw new IllegalArgumentException("Error: cannot take " + card + " from Stock as it is not reachable.\nReachable cards: " + reachableCards());
