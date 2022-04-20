@@ -4,6 +4,7 @@ import model.Card;
 import model.IllegalMoveException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import utils.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,24 +24,16 @@ public class Stock implements CardContainer {
 	public Stock(int... cards) {
 		if (cards == null)
 			throw new IllegalArgumentException("Error: Cards must not be null");
+		if (ArrayUtils.containsDuplicates(cards))
+			throw new IllegalArgumentException("Error: Stock may not contain duplicate cards!");
 		for (int card : cards) {
+			Card.validateCard(card);
 			if (isUnknown(card))
-				throw new IllegalArgumentException("Error: Stock can not be updated, thus card may not be unknown");
-			if (!Card.isValidCard(card))
-				throw new IllegalArgumentException("Error: Card is not a valid card. Card: " + card);
-
-			// This is slow, but it need only be done once, so it's fine
-			int duplicates = -1;
-			for (int otherCard : cards) {
-				if (card == otherCard)
-					duplicates++;
-			}
-			if (duplicates > 0)
-				throw new IllegalArgumentException("Error: Stock may not contain duplicate cards!");
+				throw new IllegalArgumentException("Error: Stock cannot be updated, thus card may not be unknown");
 		}
 		this.cards = cards;
 		size = cards.length;
-		waste = size() - 1;
+		waste = getNumberOfCards() - 1;
 	}
 
 	@SuppressWarnings("CopyConstructorMissesField")
