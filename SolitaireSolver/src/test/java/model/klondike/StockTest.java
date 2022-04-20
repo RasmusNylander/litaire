@@ -274,6 +274,14 @@ class StockTest {
 	}
 
 	@Test
+	void changing_original_should_not_change_copy() {
+		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three);
+		Stock copy = stock.copy();
+		stock.move(Card.Three, new MockCardContainer());
+		assertEquals(new Stock(Card.Ace, Card.Two, Card.Three), copy);
+	}
+
+	@Test
 	void identical_stocks_should_be_equal() {
 		Stock stock = new Stock(Card.Ace, Card.Two, Card.Three, Card.Four);
 		assertEquals(stock, stock);
