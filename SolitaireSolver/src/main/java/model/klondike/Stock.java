@@ -75,7 +75,7 @@ public class Stock implements CardContainer {
 
 	@Contract(pure = true)
 	@Deprecated
-	public int size() {
+	private int size() {
 		return size;
 	}
 
