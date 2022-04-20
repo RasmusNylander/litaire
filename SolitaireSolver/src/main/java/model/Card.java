@@ -45,4 +45,8 @@ public abstract class Card {
 	public static boolean isValidCard(int card) {
 		return (card & RankMask) >= Ace && (card & RankMask) <= Unknown; // This also ensure that no bit is set after SuitMask
 	}
+
+	public static void validateCard(int card) throws InvalidCardException {
+		if (!isValidCard(card)) throw new InvalidCardException("Error: Invalid card: " + card + ".");
+	}
 }

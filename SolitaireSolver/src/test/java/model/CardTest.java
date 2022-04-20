@@ -64,6 +64,7 @@ class CardTest {
 		assertEquals(Card.asString(Card.Ten | Card.Type).length(), Card.asString(Card.Nine | Card.Colour).length());
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Test
 	void unknown_cards_should_have_string_representation() {
 		assertDoesNotThrow(() -> {
@@ -83,6 +84,17 @@ class CardTest {
 		assertTrue(Card.isValidCard(Card.Ace | Card.Colour));
 		assertTrue(Card.isValidCard(Card.Unknown));
 		assertTrue(Card.isValidCard(Card.Seven | Card.Type));
+	}
+
+	@Test
+	void validate_card_should_throw_exception_if_card_is_invalid() {
+		assertThrows(InvalidCardException.class, () -> Card.validateCard(69854));
+	}
+
+	@Test
+	void validate_card_should_not_throw_exception_if_card_is_valid() {
+		assertDoesNotThrow(() -> Card.validateCard(Card.Ace | Card.Colour));
+		assertDoesNotThrow(() -> Card.validateCard(Card.Unknown));
 	}
 
 
