@@ -4,7 +4,6 @@ import model.Card;
 import model.IllegalMoveException;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -45,19 +44,6 @@ class StockTest {
 	@Test
 	void should_throw_exception_if_cards_is_null() {
 		assertThrows(IllegalArgumentException.class, () -> new Stock((int[]) null));
-	}
-
-	@Test
-	void should_throw_exception_if_card_is_null() {
-		Collection<Integer> cards = new ArrayList<>(1);
-		cards.add(null);
-		assertThrows(IllegalArgumentException.class, () -> new Stock(cards));
-	}
-
-	@SuppressWarnings("ConstantConditions")
-	@Test
-	void should_throw_exception_if_collection_is_null() {
-		assertThrows(IllegalArgumentException.class, () -> new Stock((Collection<Integer>) null));
 	}
 
 	@Test

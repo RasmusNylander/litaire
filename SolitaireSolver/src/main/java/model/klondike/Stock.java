@@ -5,7 +5,10 @@ import model.IllegalMoveException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 
 import static model.Card.isUnknown;
@@ -40,26 +43,11 @@ public class Stock implements CardContainer {
 		waste = size() - 1;
 	}
 
-	public Stock(@NotNull Collection<Integer> cards) {
-		this(intArrayFromIntegerCollection(cards));
-	}
-
 	@SuppressWarnings("CopyConstructorMissesField")
 	public Stock(Stock stock) {
 		this.cards = stock.cards;
 		this.size = stock.size;
 		this.waste = stock.waste;
-	}
-
-	private static int[] intArrayFromIntegerCollection(Collection<Integer> collection) {
-		Integer[] integerArray = collection.toArray(new Integer[0]);
-		int[] intArray = new int[integerArray.length];
-		for (int i = 0; i < intArray.length; i++) {
-			if (integerArray[i] == null)
-				throw new IllegalArgumentException("Error: Cannot convert null to primitive type int");
-			intArray[i] = integerArray[i];
-		}
-		return intArray;
 	}
 
 	@Override
