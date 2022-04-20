@@ -26,5 +26,25 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>io.packagecloud.maven.wagon</groupId>
+                <artifactId>maven-packagecloud-wagon</artifactId>
+                <version>0.0.6</version>
+            </extension>
+        </extensions>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>packagecloud-cdio21</id>
+            <url>packagecloud+https://packagecloud.io/tobiasmaneschijn/cdio21</url>
+        </repository>
+        <snapshotRepository>
+            <id>packagecloud-cdio21</id>
+            <url>packagecloud+https://packagecloud.io/tobiasmaneschijn/cdio21</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
