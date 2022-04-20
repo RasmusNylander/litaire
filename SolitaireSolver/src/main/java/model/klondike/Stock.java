@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Function;
 
+import static model.Card.isUnknown;
+
 public class Stock implements CardContainer {
 	private final int[] cards;
 	private int size;
@@ -19,7 +21,7 @@ public class Stock implements CardContainer {
 		if (cards == null)
 			throw new IllegalArgumentException("Error: Cards must not be null");
 		for (int card : cards) {
-			if ((card & Card.RankMask) == Card.Unknown)
+			if (isUnknown(card))
 				throw new IllegalArgumentException("Error: Stock can not be updated, thus card may not be unknown");
 			if (!Card.isValidCard(card))
 				throw new IllegalArgumentException("Error: Card is not a valid card. Card: " + card);

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 import static model.Card.RankMask;
+import static model.Card.isUnknown;
 
 class Column implements CardContainer {
 	/**
@@ -18,6 +19,7 @@ class Column implements CardContainer {
 	private final int[] cards;
 	private int numCards;
 
+	@SuppressWarnings("CopyConstructorMissesField")
 	protected Column(Column column) {
 		this.cards = column.cards.clone();
 		this.numCards = column.numCards;
@@ -57,7 +59,7 @@ class Column implements CardContainer {
 	}
 
 	public void reveal(int card, int index) {
-		if (cards[index] != Card.Unknown)
+		if (!isUnknown(cards[index]))
 			throw new IllegalArgumentException("Error: Card at index " + index + " is already revealed!");
 		cards[index] = card;
 	}
@@ -67,7 +69,7 @@ class Column implements CardContainer {
 		if (isEmpty())
 			return Optional.empty();
 		int card = cards[getNumberOfCards() - 1];
-		if (card == Card.Unknown)
+		if (isUnknown(card))
 			throw new IllegalStateException("Error: Undefined! Unknown card cannot be a destination.");
 		return Optional.of(card);
 	}
@@ -135,7 +137,7 @@ class Column implements CardContainer {
 	public @NotNull Set<Integer> reachableCards() {
 		Set<Integer> reachableCards = new HashSet<>(size());
 		for (int i = size() - 1; i >= 0; i--) {
-			if (cards[i] == Card.Unknown) break;
+			if (isUnknown(cards[i])) break;
 			reachableCards.add(cards[i]);
 		}
 		return reachableCards;

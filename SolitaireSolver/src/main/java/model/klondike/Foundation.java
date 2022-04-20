@@ -10,6 +10,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import static model.Card.isUnknown;
+
 class Foundation implements CardContainer {
 	int[] cards;
 	int size;
@@ -30,7 +32,7 @@ class Foundation implements CardContainer {
 		this();
 
 		Card.validateCard(lastCard);
-		if (lastCard == (Card.Unknown & Card.RankMask))
+		if (isUnknown(lastCard))
 			throw new IllegalArgumentException("Error: Cannot create Foundation with Unknown card.");
 
 		int nextCard = Card.Ace | (lastCard & Card.SuitMask);
@@ -56,9 +58,9 @@ class Foundation implements CardContainer {
 
 	private boolean acceptableSequence(int @NotNull ... cards) {
 		if (cards.length == 0) return true;
-		if (cards[0] == Card.Unknown) return false;
+		if (isUnknown(cards[0])) return false;
 		for (int i = 1; i < cards.length; i++) {
-			if (cards[i] == Card.Unknown) return false;
+			if (isUnknown(cards[i])) return false;
 			if (cards[i] - cards[i - 1] != 1) return false;
 		}
 		return true;

@@ -97,5 +97,27 @@ class CardTest {
 		assertDoesNotThrow(() -> Card.validateCard(Card.Unknown));
 	}
 
+	@Test
+	void is_unknown_should_return_true_given_unknown_card() {
+		assertTrue(Card.isUnknown(Card.Unknown));
+	}
+
+	@Test
+	void is_unknown_should_return_true_given_unknown_card_with_different_suits() {
+		assertTrue(Card.isUnknown(Card.Unknown | Card.Colour));
+		assertTrue(Card.isUnknown(Card.Unknown | Card.Type));
+		assertTrue(Card.isUnknown(Card.Unknown | Card.Type | Card.Colour));
+	}
+
+	@Test
+	void is_unknown_should_return_false_given_known_card() {
+		assertFalse(Card.isUnknown(Card.Ace | Card.Colour));
+		assertFalse(Card.isUnknown(Card.King | Card.Type));
+	}
+
+	@Test
+	void is_unknown_should_return_false_given_invalid_card() {
+		assertFalse(Card.isUnknown(8963465));
+	}
 
 }

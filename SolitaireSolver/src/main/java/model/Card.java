@@ -40,7 +40,7 @@ public abstract class Card {
 	}
 
 	public static String asString(int card) {
-		if (card == Unknown) return "??";
+		if (isUnknown(card)) return "??";
 		final String[] rankAsString = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
 		final String[] suitAsString = {"♠", "♥", "♣", "♦"};
 		return suitAsString[(card & SuitMask) >> 4] + rankAsString[card & RankMask];
@@ -56,5 +56,9 @@ public abstract class Card {
 
 	public static void validateCard(int card) throws InvalidCardException {
 		if (!isValidCard(card)) throw new InvalidCardException("Error: Invalid card: " + card + ".");
+	}
+
+	public static boolean isUnknown(int card) {
+		return (card & RankMask) == Unknown;
 	}
 }
