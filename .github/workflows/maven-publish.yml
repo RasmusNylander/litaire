@@ -7,8 +7,12 @@ on:
   release:
     types: [created]
 
+defaults:
+    run:
+        working-directory: SolitaireSolver
 jobs:
   build:
+  
 
     runs-on: ubuntu-latest
     permissions:
@@ -26,9 +30,11 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: Build with Maven
-      run: mvn -B package --file $GITHUB_WORKSPACE/SolitaireSolver/pom.xml
+      run: mvn -B package --file pom.xml
+      working-directory: SolitaireSolver
 
     - name: Publish to GitHub Packages Apache Maven
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
+      working-directory: SolitaireSolver
       env:
         GITHUB_TOKEN: ${{ github.token }}
