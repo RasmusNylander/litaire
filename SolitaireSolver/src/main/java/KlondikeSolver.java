@@ -15,6 +15,8 @@ public class KlondikeSolver implements Solver<Klondike> {
 		//TODO: Look more than one move ahead
 		//TODO: Respect max search depth
 		Move[] possibleMoves = game.possibleMoves().toArray(new Move[0]);
+		if (possibleMoves.length < 1)
+			throw new IllegalArgumentException("Error: No possible moves");
 		return possibleMoves[(int) (Math.random() * possibleMoves.length)];
 	}
 }

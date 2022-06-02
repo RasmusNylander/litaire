@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class KlondikeSolverTest {
@@ -36,8 +35,8 @@ class KlondikeSolverTest {
 	}
 
 	@Test
-	void get_best_move_should_not_return_null() {
+	void get_best_move_should_throw_exeption_if_no_possible_moves() {
 		KlondikeSolver solver = new KlondikeSolver();
-		assertNotNull(solver.getBestMove(Klondike.newGame(Stock.Empty), 1, Duration.ofDays(5)));
+		assertThrows(IllegalArgumentException.class, () -> solver.getBestMove(Klondike.newGame(Stock.Empty), 1, Duration.ofDays(5)));
 	}
 }
